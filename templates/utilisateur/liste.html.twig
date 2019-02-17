@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+    <h1> Liste des utilisateurs </h1>
+
+    {% if not listeUtilisateurs is empty %}
+        {{ form_start(form)}} 
+        <table class="table">
+
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de naissance</th>
+                <th>Date d'inscription</th>
+                <th></th>
+                <th></th>
+            </tr>
+                    {% for key,value in listeUtilisateurs %}
+                <tr>
+                    <td>{{ value.nom }}</td>
+                    <td>{{ value.prenom }}</td>
+                    <td>{{ value.datenaissance|date("m/d/Y") }}</td>
+                    <td>{{ value.dateinscription|date("m/d/Y") }}</td>
+                    <td><a href="{{ path('utilisateur_modifier',{'id':value.id})}}" >Modifier</a></td>
+                    <td><input type="checkbox" name="cocher[]" value="{{ value.id }}"/></td>
+                </tr>
+                    {% endfor %}
+        </table>
+        <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            {{ form_widget(form.save) }}
+        </div>
+    </div>
+        {{ form_end(form)}} 
+    {% else %}
+        Aucun utilisateur à afficher
+    {% endif %}
+    
+{% endblock body  %}

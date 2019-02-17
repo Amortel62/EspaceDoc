@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des fichiers{% endblock %}
+
+{% block body %}
+    <h1> Liste des fichiers </h1>
+
+    {% if not listeFichiers is empty %}
+         {{ form_start(form)}} 
+        <table class="table">
+
+            <tr>
+                <th>Nom</th>
+                <th>Nom Original</th>
+                <th>Date</th>
+                <th>Extension</th>
+                <th>Taille</th>
+                <th>Utilisateur</th>
+                    
+                    {% for key,value in listeFichiers %}
+            </tr>
+            <tr>
+                <td>{{ value.nom }}</td>
+                <td>{{ value.nomoriginal }}</td>
+                <td>{{ value.date|date("m-d-Y") }}</td>
+                <td>{{ value.extension }}</td>
+                <td>{{ value.taille }}</td>
+                <td>{{ value.utilisateur.nom }}</td>
+                <td><a href="{{ path('fichier_modifier',{'id':value.id})}}">Modifier</td>
+                <td><input type="checkbox" name="cocher[]"value="{{ value.id }}"/></td>
+                
+            </tr>
+                    {% endfor %}
+        </table>
+        
+         <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            {{ form_widget(form.save) }}
+        </div>
+    </div>
+        {{ form_end(form)}}
+    {% else %}
+        Aucun fichier à afficher
+    {% endif %}
+{% endblock %}
