@@ -6,6 +6,7 @@
 parameters:
     locale: 'fr'
     file_directory: '%kernel.project_dir%/uploads/fichiers'
+    logs_directory: '%kernel.project_dir%/logs'
     
 
 services:

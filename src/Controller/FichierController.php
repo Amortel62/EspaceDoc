@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Fichier;
+use App\Entity\Telechargement;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,15 @@ class FichierController extends AbstractController {
     private function generateUniqueFileName() {
         return md5(uniqid());
     }
+    
+    private function ecrire_log($errtxt){
+        $fp = fopen('C:\xampp\htdocs\futur\logs\telechargement.log','a+'); // ouvrir le fichier ou le créer
+    
+        fseek($fp,SEEK_END); // poser le point de lecture à la fin du fichier
+        $nouverr=$errtxt."\r\n"; // ajouter un retour à la ligne au fichier
+        fputs($fp,$nouverr); // ecrire ce texte
+        fclose($fp); //fermer le fichier
+    }
 
     /**
      * @Route("/download/{id}", name="download")
@@ -30,12 +40,30 @@ class FichierController extends AbstractController {
 
         $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class);
         $fichier = $repository->find($request->get('id')); // On récupère le fichier grâce à l'id passé dans l'URL
-        $idfichiers = $repository->findBy(['id' => $this->getUser()->getId()]); // On récupère les ID des fichiers appartenant à l'utilisateur connecté
+        $idfichiers = $repository->findBy(['id' => $this->getUser()->getId()]); // On récupère les fichiers appartenant à l'utilisateur connecté
         $hasAccess = $this->isGranted('ROLE_ADMIN'); //J'instancie une variable pour vérifier plus tard si le rôle de l'utilisateur est bien admin
 
         foreach ($idfichiers as $key => $value) {
             if ($fichier->getUser()->getId() == $value->getId() || $hasAccess) {
-
+                
+                
+                $repository2 = $this->getDoctrine()->getManager()->getRepository(Telechargement::class);
+                $leTelechargement = $repository2->findOneBy([
+                    'user' => $this->getUser(),
+                    'fichier' => $fichier
+                ]);
+                if($leTelechargement == null){
+                    
+                    $leTelechargement = new Telechargement();
+                    
+                }
+                $leTelechargement->setFichier($fichier);  
+                $leTelechargement->setUser($this->getUser());
+                $leTelechargement->setNb($leTelechargement->getNb()+1);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($leTelechargement);
+                    $em->flush();
+                 $this->ecrire_log('L\'utilisateur '.$this->getUser()->getUsername().' a téléchargé le fichier '.$fichier->getNom().' dont le propriétaire est '.$fichier->getUser()->getUsername().' C\'est la '.$leTelechargement->getNb().' ème fois qu\'il le télécharge');
                 return $this->file($this->getParameter('file_directory') . '/' . $fichier->getNom());
                 
             } else {
@@ -50,11 +78,15 @@ class FichierController extends AbstractController {
      * @Route("/fichier_ajout", name="fichier_ajout")
      */
     public function ajout(Request $request) {
+        
         $hasAccess = $this->isGranted('ROLE_ADMIN');
 
         $fichier = new Fichier();
+        
         if ($hasAccess == true) {
+            
             $form = $this->createFormBuilder($fichier)
+                    
                     ->add('user', EntityType::class, array(
                         'class' => 'App\Entity\User',
                         'choice_label' => 'nom'
@@ -64,21 +96,30 @@ class FichierController extends AbstractController {
                         'choice_label' => 'libelle',
                         'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur !
                     ))
-                    ->add('nom', FileType::class, array('label' => 'Fichier à télécharger'))
-                    ->add('save', SubmitType::class, array('label' => 'Ajouter'))
+                    ->add('nom', FileType::class, array(
+                        'label' => 'Fichier à télécharger'
+                    ))
+                    ->add('save', SubmitType::class, array(
+                        'label' => 'Ajouter'
+                    ))
                     ->getForm();
-        } else {
+        }else{
             $form = $this->createFormBuilder($fichier)
+                    
                     ->add('themes', EntityType::class, array(
                         'class' => 'App\Entity\Theme',
                         'choice_label' => 'libelle',
                         'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur !
                     ))
-                    ->add('nom', FileType::class, array('label' => 'Fichier à télécharger'))
-                    ->add('save', SubmitType::class, array('label' => 'Ajouter'))
+                    ->add('nom', FileType::class, array(
+                        'label' => 'Fichier à télécharger'
+                    ))
+                    ->add('save', SubmitType::class, array(
+                        'label' => 'Ajouter'
+                    ))
                     ->getForm();
         }
-        $form->handleRequest($request);
+            $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -123,23 +164,39 @@ class FichierController extends AbstractController {
         $fichier = new Fichier(); //On instancie une nouvelle instance de Fichier
 
         $form = $this->createFormBuilder($fichier)//On créé le formulaire
-                ->add('save', SubmitType::class, array('attr' => array('class' => 'save'), 'label' => 'Supprimer'))//Bouton qui permet de supprimer dans la suite du code
+                
+                ->add('save', SubmitType::class, array(
+                    'attr' => array(
+                        'class' => 'save'), 
+                        'label' => 'Supprimer'))//Bouton qui permet de supprimer dans la suite du code
                 ->getForm(); //Finition
+        
         if ($request->isMethod('POST')) {//On récupère les informations du formulaire quand il est envoyé
+            
             $form->handleRequest($request);
+            
             if ($form->isValid()) {//On vérifie qu'il est bien valide
+                
                 $cocher = $request->request->get('cocher'); //On récupère toutes les cases cochées
+                
                 foreach ($cocher as $i) {//Pour chaque case cochée
+                    
                     $u = $repository->find($i); //On récupère les informations liées à la case cochée
                     $this->getDoctrine()->getManager()->remove($u); //On supprime ces dernières
                 }
+                
                 $this->getDoctrine()->getManager()->flush(); //On met à jour la BD
+                
             }
+            
         }
         if ($hasAccess == true) {//S'il l'utilisateur est bien ADMIN
+            
             $listeFichiers = $repository->findAll(); //On récupère la liste de tous les fichiers
+            
             return $this->render('fichier/liste.html.twig', [
-                        'listeFichiers' => $listeFichiers, 'form' => $form->createView(),
+                        'listeFichiers' => $listeFichiers, 
+                        'form' => $form->createView(),
             ]); //Affiche la page twig lié à ce controller et on transmet le formulaire
         }
     }

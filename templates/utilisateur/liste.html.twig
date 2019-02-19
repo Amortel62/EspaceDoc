@@ -10,19 +10,32 @@
         <table class="table">
 
             <tr>
+                <th>Utilisateur</th>
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Date de naissance</th>
                 <th>Date d'inscription</th>
+                <th>Rôle</td>
                 <th></th>
                 <th></th>
             </tr>
+           
                     {% for key,value in listeUtilisateurs %}
                 <tr>
+                    <td>{{ value.username }}</td>
                     <td>{{ value.nom }}</td>
                     <td>{{ value.prenom }}</td>
-                    <td>{{ value.datenaissance|date("m/d/Y") }}</td>
-                    <td>{{ value.dateinscription|date("m/d/Y") }}</td>
+                    <td>{{ value.datenaissance|date("d-m-Y") }}</td>
+                    <td>{{ value.dateinscription|date("d-m-Y") }}</td>
+                    <td>
+                   
+                    {% if value.roles|first == "ROLE_ADMIN" %}
+                            Administrateur
+                        {% else %}
+                        Utilisateur
+                    {% endif %}
+                  
+                    </td>
                     <td><a href="{{ path('utilisateur_modifier',{'id':value.id})}}" >Modifier</a></td>
                     <td><input type="checkbox" name="cocher[]" value="{{ value.id }}"/></td>
                 </tr>

@@ -11,7 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class UtilisateurController extends AbstractController {
 
@@ -35,12 +36,11 @@ class UtilisateurController extends AbstractController {
                     'format' => 'yyyy-MM-dd',
                 ))
                 ->add('roles', ChoiceType::class, array(
-                    'mapped'=>false,'choices' => array(
-                        'Utilisateur' =>'ROLE_USER',
+                    'mapped' => false, 'choices' => array(
+                        'Utilisateur' => 'ROLE_USER',
                         'Administrateur' => 'ROLE_ADMIN',
-                     ),
+                    ),
                 ))
-
                 ->add('save', SubmitType::class, array('label' => 'Ajouter'))
                 ->getForm();
         if ($request->isMethod('POST')) {
@@ -80,7 +80,7 @@ class UtilisateurController extends AbstractController {
         $listeUtilisateurs = $repository->findAll();
 
         return $this->render('utilisateur/liste.html.twig', [
-                    'listeUtilisateurs' => $listeUtilisateurs, 'form' =>$form->createView(),
+                    'listeUtilisateurs' => $listeUtilisateurs, 'form' => $form->createView(),
         ]);
     }
 
@@ -90,9 +90,9 @@ class UtilisateurController extends AbstractController {
     public function modifier(Request $request) {
         $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = $repository->find($request->get('id'));
+       
         $form = $this->createFormBuilder($utilisateur)
                 ->add('username', TextType::class)
-                ->add('password', PasswordType::class)
                 ->add('nom', TextType::class)
                 ->add('prenom', TextType::class)
                 ->add('datenaissance', DateType::class, array(
@@ -100,7 +100,8 @@ class UtilisateurController extends AbstractController {
                     'format' => 'yyyy-MM-dd',))
                 ->add('dateinscription', DateType::class, array(
                     'widget' => 'single_text',
-                    'format' => 'yyyy-MM-dd',))
+                    'format' => 'yyyy-MM-dd',
+                    'disabled' => 'true'))
                 ->add('save', SubmitType::class, array('label' => 'Modifier'))
                 ->getForm();
         if ($request->isMethod('POST')) {
