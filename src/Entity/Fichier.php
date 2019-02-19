@@ -39,13 +39,13 @@ class Fichier
     private $taille;
     
     /**
-    * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="fichiers")
+    * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="fichiers", cascade={"persist"})
     */
-     private $utilisateur;
+     private $user;
      
     /**
     *
-    * @ORM\ManyToMany(targetEntity="Theme")
+    * @ORM\ManyToMany(targetEntity="App\Entity\Theme")
     */
     private $themes;
 
@@ -112,14 +112,14 @@ class Fichier
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function setUser(?User $user): self
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }

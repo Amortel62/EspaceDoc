@@ -9,36 +9,80 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{{ path('accueil') }}">Menu</a>
+            <a class="navbar-brand" href="{{ path('accueil') }}">Espace documentation</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ path('accueil') }}">Accueil</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ path('faq') }}">FAQ</a>
-                </li>
-                 <li class="nav-item">
-                  <a class="nav-link" href="{{ path('apropos') }}">A propos</a>
-                </li>
-                 <li class="nav-item">
-                  <a class="nav-link" href="{{ path('mentions') }}">Mentions légales</a>
-                </li>
-              </ul>
-              <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Taper votre recherche" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
-              </form>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('accueil') }}">Accueil</a>
+                    </li>
+                    {% if is_granted('ROLE_USER') %}
+                     <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('fichier_ajout') }}">Ajouter un fichier</a>
+                    </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') %}
+                     <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('fichier_maliste') }}">Mes fichiers</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('faq') }}">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('apropos') }}">A propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('mentions') }}">Mentions légales</a>
+                    </li>
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('inscrire') }}">S'inscrire</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Se connecter</a></li>
+                        {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('moncompte') }}">Mon compte</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav_item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{{ path('utilisateur_ajout') }}" id="dropdown01"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+                            <ul class="dropdown-menu">
+                                <li> Utilisateur </li>
+                                <li><a class="dropdown-item" href="{{ path('utilisateur_ajout') }}">Ajout
+                                        utilisateur</a></li>
+                                <li><a class="dropdown-item" href="{{ path('utilisateur_liste') }}">Liste des
+                                        utilisateurs</a></li>
+                                <li role="separator" class="divider"></li>
+                                 <li> Fichier </li>
+                                <li><a class="dropdown-item" href="{{ path('fichier_ajout') }}">Ajout
+                                        fichier</a></li>
+                                <li><a class="dropdown-item" href="{{ path('fichier_liste') }}">Liste des
+                                        fichiers</a></li>
+                                <li role="separator" class="divider"></li>
+                                 <li> Thème </li>
+                                <li><a class="dropdown-item" href="{{ path('theme_ajout') }}">Ajout
+                                        thème</a></li>
+                                <li><a class="dropdown-item" href="{{ path('theme_liste') }}">Liste des
+                                        thèmes</a></li>
+                                <li role="separator" class="divider"></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Taper votre recherche" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+                </form>
             </div>
-          </nav>
+        </nav>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
         <script src=" {{ asset('js/jquery-3.3.1.min.js') }}"></script>
         <script src=" {{ asset('js/bootstrap.min.js') }}"></script>
-     
+
     </body>
 </html>

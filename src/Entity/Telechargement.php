@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @UniqueEntity(
- * fields={"utilisateur", "fichier"},
+ * fields={"user", "fichier"},
  * )
  */
 class Telechargement
@@ -28,9 +28,9 @@ class Telechargement
      */
     private $nb;
     /**
-    * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="fichiers")
+    * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="fichiers")
     */
-    private $utilisateur;
+    private $user;
 
     /**
     * @ORM\ManyToOne(targetEntity="App\Entity\Fichier")
@@ -54,14 +54,14 @@ class Telechargement
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function setUser(?User $user): self
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }

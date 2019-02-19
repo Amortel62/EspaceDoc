@@ -10,8 +10,7 @@
         <table class="table">
 
             <tr>
-                <th>Utilisateur</th>
-                <th>Thème</th>
+              
                 <th>Nom</th>
                 <th>Nom Original</th>
                 <th>Date</th>
@@ -22,34 +21,13 @@
                     {% for key,value in listeFichiers %}
             </tr>
             <tr>
-                {% if value.user.nom is not null %}
-                <td>{{ value.user.nom }}</td>
-                {% else %}
-                    <td>Pas de nom attribué</td>
-                {% endif %}
-                <td>
-              
-                    {% for key,value in value.themes %}
-
-                     {% if loop.last ==  false%}
-                         
-                         {{ value.libelle }}</br>
-                         
-                     {% else %}
-                         
-                         {{ value.libelle }}
-                         
-                     {% endif %}
-                    
-                   
-                {% endfor %}
-                </td>
+             
                 <td><a href="{{ path('download',{'id':value.id}) }}">{{ value.nom }}</a></td>
                 <td>{{ value.nomoriginal }}</td>
                 <td>{{ value.date|date("d-m-Y : H-m") }}</td>
                 <td>{{ value.extension }}</td>
                 <td>{{ value.taille }}</td>               
-                <td><a href="{{ path('fichier_modifier',{'id':value.id})}}">Modifier</a></td>
+                <td><a href="{{ path('fichier_modifier',{'id':value.id})}}">Modifier</td>
                 <td><input type="checkbox" name="cocher[]"value="{{ value.id }}"/></td>
                 
             </tr>

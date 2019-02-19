@@ -24,18 +24,60 @@ class FichierController extends AbstractController {
     }
 
     /**
+     * @Route("/download/{id}", name="download")
+     */
+    public function download(Request $request) {
+
+        $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class);
+        $fichier = $repository->find($request->get('id')); // On récupère le fichier grâce à l'id passé dans l'URL
+        $idfichiers = $repository->findBy(['id' => $this->getUser()->getId()]); // On récupère les ID des fichiers appartenant à l'utilisateur connecté
+        $hasAccess = $this->isGranted('ROLE_ADMIN'); //J'instancie une variable pour vérifier plus tard si le rôle de l'utilisateur est bien admin
+
+        foreach ($idfichiers as $key => $value) {
+            if ($fichier->getUser()->getId() == $value->getId() || $hasAccess) {
+
+                return $this->file($this->getParameter('file_directory') . '/' . $fichier->getNom());
+                
+            } else {
+
+             return $this ->maliste($request);
+                
+            }
+        }
+    }
+
+    /**
      * @Route("/fichier_ajout", name="fichier_ajout")
      */
     public function ajout(Request $request) {
+        $hasAccess = $this->isGranted('ROLE_ADMIN');
+
         $fichier = new Fichier();
-        $form = $this->createFormBuilder($fichier)
-                ->add('utilisateur', EntityType::class, array(
-                    'class' => 'App\Entity\Utilisateur',
-                    'choice_label' => 'nom'
-                ))
-                ->add('nom', FileType::class, array('label' => 'Fichier à télécharger'))
-                ->add('save', SubmitType::class, array('label' => 'Ajouter'))
-                ->getForm();
+        if ($hasAccess == true) {
+            $form = $this->createFormBuilder($fichier)
+                    ->add('user', EntityType::class, array(
+                        'class' => 'App\Entity\User',
+                        'choice_label' => 'nom'
+                    ))
+                    ->add('themes', EntityType::class, array(
+                        'class' => 'App\Entity\Theme',
+                        'choice_label' => 'libelle',
+                        'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur !
+                    ))
+                    ->add('nom', FileType::class, array('label' => 'Fichier à télécharger'))
+                    ->add('save', SubmitType::class, array('label' => 'Ajouter'))
+                    ->getForm();
+        } else {
+            $form = $this->createFormBuilder($fichier)
+                    ->add('themes', EntityType::class, array(
+                        'class' => 'App\Entity\Theme',
+                        'choice_label' => 'libelle',
+                        'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur !
+                    ))
+                    ->add('nom', FileType::class, array('label' => 'Fichier à télécharger'))
+                    ->add('save', SubmitType::class, array('label' => 'Ajouter'))
+                    ->getForm();
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -45,6 +87,10 @@ class FichierController extends AbstractController {
             $file = $fichier->getNom();
             // On renomme le fichier et on lui redonne son extension pour stocker le tout dans $fileName
             $fileName = $this->generateUniqueFileName() . '.' . $file->guessExtension();
+            if ($hasAccess !== true) {
+                $user = $this->getUser();
+                $fichier->setUser($user);
+            }
             $fichier->setNom($fileName);
             $fichier->setDate(new \DateTime()); //récupère la date du jour
             $fichier->setExtension($file->guessExtension()); // Récupère l’extension du fichier
@@ -71,27 +117,62 @@ class FichierController extends AbstractController {
      */
     public function liste(Request $request) {
 
-        $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class);
-        $fichier = new Fichier();
-        $form = $this->createFormBuilder($fichier)
-                ->add('save', SubmitType::class, array('attr' => array('class' => 'save'), 'label' => 'Supprimer'))
-                ->getForm();
-        if ($request->isMethod('POST')) {
+        $hasAccess = $this->isGranted('ROLE_ADMIN'); //Renvoie true si l'utilisateur connecté possède le rôle ADMIN
+
+        $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class); //On récupère les informations de la table Fichier
+        $fichier = new Fichier(); //On instancie une nouvelle instance de Fichier
+
+        $form = $this->createFormBuilder($fichier)//On créé le formulaire
+                ->add('save', SubmitType::class, array('attr' => array('class' => 'save'), 'label' => 'Supprimer'))//Bouton qui permet de supprimer dans la suite du code
+                ->getForm(); //Finition
+        if ($request->isMethod('POST')) {//On récupère les informations du formulaire quand il est envoyé
             $form->handleRequest($request);
-            if ($form->isValid()) {
-                $cocher = $request->request->get('cocher');
-                foreach ($cocher as $i) {
-                    $u = $repository->find($i);
-                    $this->getDoctrine()->getManager()->remove($u);
+            if ($form->isValid()) {//On vérifie qu'il est bien valide
+                $cocher = $request->request->get('cocher'); //On récupère toutes les cases cochées
+                foreach ($cocher as $i) {//Pour chaque case cochée
+                    $u = $repository->find($i); //On récupère les informations liées à la case cochée
+                    $this->getDoctrine()->getManager()->remove($u); //On supprime ces dernières
                 }
-                $this->getDoctrine()->getManager()->flush();
+                $this->getDoctrine()->getManager()->flush(); //On met à jour la BD
             }
         }
-        $listeFichiers = $repository->findAll();
+        if ($hasAccess == true) {//S'il l'utilisateur est bien ADMIN
+            $listeFichiers = $repository->findAll(); //On récupère la liste de tous les fichiers
+            return $this->render('fichier/liste.html.twig', [
+                        'listeFichiers' => $listeFichiers, 'form' => $form->createView(),
+            ]); //Affiche la page twig lié à ce controller et on transmet le formulaire
+        }
+    }
 
-        return $this->render('fichier/liste.html.twig', [
-                    'listeFichiers' => $listeFichiers, 'form' => $form->createView(),
-        ]);
+    /**
+     * @Route("/fichier_maliste", name="fichier_maliste")
+     */
+    public function maliste(Request $request) {
+
+
+        $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class); //On récupère les informations de la table Fichier
+        $fichier = new Fichier(); //On instancie une nouvelle instance de Fichier
+
+        $form = $this->createFormBuilder($fichier)//On créé le formulaire
+                ->add('save', SubmitType::class, array('attr' => array('class' => 'save'), 'label' => 'Supprimer'))//Bouton qui permet de supprimer dans la suite du code
+                ->getForm(); //Finition
+        if ($request->isMethod('POST')) {//On récupère les informations du formulaire quand il est envoyé
+            $form->handleRequest($request);
+            if ($form->isValid()) {//On vérifie qu'il est bien valide
+                $cocher = $request->request->get('cocher'); //On récupère toutes les cases cochées
+                foreach ($cocher as $i) {//Pour chaque case cochée
+                    $u = $repository->find($i); //On récupère les informations liées à la case cochée
+                    $this->getDoctrine()->getManager()->remove($u); //On supprime ces dernières
+                }
+                $this->getDoctrine()->getManager()->flush(); //On met à jour la BD
+            }
+        }
+
+
+        $fichiers = $repository->findBy(['user' => $this->getUser()]); //On récupère les fichiers liés à l'utilisateur en cours
+        return $this->render('fichier/maliste.html.twig', [
+                    'listeFichiers' => $fichiers, 'form' => $form->createView(),
+        ]); //Affiche la page twig lié à ce controller et on transmet le formulaire
     }
 
     /**
@@ -102,15 +183,20 @@ class FichierController extends AbstractController {
         $fichier = $repository->find($request->get('id'));
         $form = $this->createFormBuilder($fichier)
                 ->add('nom', TextType::class)
-                ->add('nomoriginal',TextType::class)
+                ->add('nomoriginal', TextType::class)
+                ->add('themes', EntityType::class, array(
+                    'class' => 'App\Entity\Theme',
+                    'choice_label' => 'libelle',
+                    'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur !
+                ))
                 ->add('date', DateType::class, array(
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
                 ))
                 ->add('extension', TextType::class)
                 ->add('taille', IntegerType::class)
-                ->add('utilisateur', EntityType::class, array(
-                    'class' => 'App\Entity\Utilisateur',
+                ->add('user', EntityType::class, array(
+                    'class' => 'App\Entity\User',
                     'choice_label' => 'nom'
                 ))
                 ->add('save', SubmitType::class, array('label' => 'Modifier'))

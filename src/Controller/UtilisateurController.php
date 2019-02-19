@@ -2,13 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Utilisateur;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 
 class UtilisateurController extends AbstractController {
@@ -18,8 +20,10 @@ class UtilisateurController extends AbstractController {
      */
     public function ajout(Request $request) {
 
-        $utilisateur = new Utilisateur();
+        $utilisateur = new User();
         $form = $this->createFormBuilder($utilisateur)
+                ->add('username', TextType::class)
+                ->add('password', PasswordType::class)
                 ->add('nom', TextType::class)
                 ->add('prenom', TextType::class)
                 ->add('datenaissance', DateType::class, array(
@@ -30,6 +34,13 @@ class UtilisateurController extends AbstractController {
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
                 ))
+                ->add('roles', ChoiceType::class, array(
+                    'mapped'=>false,'choices' => array(
+                        'Utilisateur' =>'ROLE_USER',
+                        'Administrateur' => 'ROLE_ADMIN',
+                     ),
+                ))
+
                 ->add('save', SubmitType::class, array('label' => 'Ajouter'))
                 ->getForm();
         if ($request->isMethod('POST')) {
@@ -50,8 +61,8 @@ class UtilisateurController extends AbstractController {
      */
     public function liste(Request $request) {
 
-        $repository = $this->getDoctrine()->getManager()->getRepository(Utilisateur::class);
-        $utilisateur = new Utilisateur();
+        $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
+        $utilisateur = new User();
         $form = $this->createFormBuilder($utilisateur)
                 ->add('save', SubmitType::class, array('attr' => array('class' => 'save'), 'label' => 'Supprimer'))
                 ->getForm();
@@ -77,9 +88,11 @@ class UtilisateurController extends AbstractController {
      * @Route("/utilisateur_modifier/{id}", name="utilisateur_modifier")
      */
     public function modifier(Request $request) {
-        $repository = $this->getDoctrine()->getManager()->getRepository(Utilisateur::class);
+        $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = $repository->find($request->get('id'));
         $form = $this->createFormBuilder($utilisateur)
+                ->add('username', TextType::class)
+                ->add('password', PasswordType::class)
                 ->add('nom', TextType::class)
                 ->add('prenom', TextType::class)
                 ->add('datenaissance', DateType::class, array(
