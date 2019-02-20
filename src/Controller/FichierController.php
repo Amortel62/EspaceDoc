@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Knp\Component\Pager\PaginatorInterface;
 
 class FichierController extends AbstractController {
 
@@ -156,7 +157,7 @@ class FichierController extends AbstractController {
     /**
      * @Route("/fichier_liste", name="fichier_liste")
      */
-    public function liste(Request $request) {
+    public function liste(Request $request, PaginatorInterface $paginator) {
 
         $hasAccess = $this->isGranted('ROLE_ADMIN'); //Renvoie true si l'utilisateur connecté possède le rôle ADMIN
 
@@ -192,7 +193,12 @@ class FichierController extends AbstractController {
         }
         if ($hasAccess == true) {//S'il l'utilisateur est bien ADMIN
             
-            $listeFichiers = $repository->findAll(); //On récupère la liste de tous les fichiers
+            $listeFichiers = $paginator->paginate(
+                    $repository->findAll(),
+                    $request->query->getInt('page',1),
+                    6
+            
+            ); //On récupère la liste de tous les fichiers
             
             return $this->render('fichier/liste.html.twig', [
                         'listeFichiers' => $listeFichiers, 
@@ -204,7 +210,7 @@ class FichierController extends AbstractController {
     /**
      * @Route("/fichier_maliste", name="fichier_maliste")
      */
-    public function maliste(Request $request) {
+    public function maliste(Request $request, PaginatorInterface $paginator) {
 
 
         $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class); //On récupère les informations de la table Fichier
@@ -227,6 +233,13 @@ class FichierController extends AbstractController {
 
 
         $fichiers = $repository->findBy(['user' => $this->getUser()]); //On récupère les fichiers liés à l'utilisateur en cours
+        
+         $fichiers = $paginator->paginate(
+                    $repository->findBy(['user' => $this->getUser()]),
+                    $request->query->getInt('page',1),
+                    12
+            
+            );
         return $this->render('fichier/maliste.html.twig', [
                     'listeFichiers' => $fichiers, 'form' => $form->createView(),
         ]); //Affiche la page twig lié à ce controller et on transmet le formulaire

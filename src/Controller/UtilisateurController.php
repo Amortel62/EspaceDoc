@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 class UtilisateurController extends AbstractController {
 
@@ -59,7 +61,7 @@ class UtilisateurController extends AbstractController {
     /**
      * @Route("/utilisateur_liste", name="utilisateur_liste")
      */
-    public function liste(Request $request) {
+    public function liste(Request $request, PaginatorInterface $paginator) {
 
         $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = new User();
@@ -77,7 +79,11 @@ class UtilisateurController extends AbstractController {
                 $this->getDoctrine()->getManager()->flush();
             }
         }
-        $listeUtilisateurs = $repository->findAll();
+        $listeUtilisateurs = $paginator->paginate(
+                $repository->findAll(),
+                $request->query->getInt('page',1),
+                    12
+                );
 
         return $this->render('utilisateur/liste.html.twig', [
                     'listeUtilisateurs' => $listeUtilisateurs, 'form' => $form->createView(),

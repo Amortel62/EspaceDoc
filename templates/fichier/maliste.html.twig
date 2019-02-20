@@ -33,7 +33,9 @@
             </tr>
                     {% endfor %}
         </table>
-        
+         <div class="pagination">
+            {{ knp_pagination_render(listeFichiers) }}
+        </div>
          <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             {{ form_widget(form.save) }}
