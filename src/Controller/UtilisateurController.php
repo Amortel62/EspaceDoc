@@ -11,9 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 
 
 class UtilisateurController extends AbstractController {
@@ -21,7 +20,7 @@ class UtilisateurController extends AbstractController {
     /**
      * @Route("/utilisateur_ajout", name="utilisateur_ajout")
      */
-    public function ajout(Request $request) {
+    public function ajout(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
 
         $utilisateur = new User();
         $form = $this->createFormBuilder($utilisateur)
@@ -44,6 +43,7 @@ class UtilisateurController extends AbstractController {
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
+                $utilisateur->setPassword($passwordEncoder->encodePassword($utilisateur, $utilisateur->getPassword()));
                 $utilisateur->setDateinscription(new \DateTime);
                 $utilisateur->setRoles(array($request->get('form')['roles']));
                 $em = $this->getDoctrine()->getManager();
@@ -127,7 +127,7 @@ class UtilisateurController extends AbstractController {
                 $em->flush();
             }
         }
-        return $this->render('utilisateur/modifier.html.twig', ['form' => $form->createView()]);
+        return $this->render('utilisateur/modifier.html.twig', ['form' => $form->createView(),'utilisateur' => $utilisateur]);
     }
 
 }

@@ -57,7 +57,7 @@ class User implements UserInterface
     
      
     /**
-    * @ORM\OneToMany(targetEntity="App\Entity\Fichier", mappedBy="user", cascade={"persist"})
+    * @ORM\OneToMany(targetEntity="App\Entity\Fichier", mappedBy="user", cascade={"remove"})
     */
     private $fichiers;
 

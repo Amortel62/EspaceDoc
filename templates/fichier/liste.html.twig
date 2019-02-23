@@ -7,7 +7,7 @@
 
     {% if not listeFichiers is empty %}
         {{ form_start(form)}} 
-        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display nowrap">
             <thead>
                 <tr>
                     <th>#</th>
@@ -18,8 +18,8 @@
                     <th>Date</th>
                     <th>Extension</th>
                     <th>Taille</th>
-                     <th>Modifier</th>
-                    <th>Supprimer</th>
+                    <th><i class="fas fa-edit"></i></th>
+                    <th><i class="fas fa-trash-alt"></i></th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +42,7 @@
                         </td>
                         <td><a href="{{ path('download',{'id':value.id}) }}">{{ value.nom }}</a></td>
                         <td>{{ value.nomoriginal }}</td>
-                        <td>{{ value.date|date("d-m-Y : H-m") }}</td>
+                        <td>{{ value.date|date("d-m-Y") }}</td>
                         <td>{{ value.extension }}</td>
                         <td>{{ value.taille }}</td>               
                         <td><a href="{{ path('fichier_modifier',{'id':value.id})}}">Modifier</a></td>
