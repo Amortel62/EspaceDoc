@@ -17,7 +17,7 @@ class AppFixtures extends Fixture {
         $roles = array();   
         $roles = array("ROLE_USER", "ROLE_ADMIN");
 
-        for ($i = 0; $i < 50; $i++) {         
+        for ($i = 0; $i < 150; $i++) {         
             
             $randomRole = array_rand($roles,1);
             unset($lesRoles);
@@ -52,7 +52,7 @@ class AppFixtures extends Fixture {
             $this->theme[] = $theme;
         }
 
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 150; $i++) {
 
             $fichier = new Fichier();
             $fichier->setNom($faker->word);
@@ -61,7 +61,8 @@ class AppFixtures extends Fixture {
             $fichier->setExtension($faker->fileExtension);
             $fichier->setTaille($faker->randomNumber($nbDigits = rand(1, 5), $strict = false));
             $fichier->setUser($this->user[rand(0, count($this->user) - 1)]);
-            $randomTheme[] = array_rand($this->theme,rand(1,count($this->theme)));
+            unset($randomTheme);
+            $randomTheme[] = array_rand($this->theme,rand(2,3));
          
             
             foreach($randomTheme as $key => $value){

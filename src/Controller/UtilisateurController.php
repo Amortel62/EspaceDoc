@@ -32,15 +32,11 @@ class UtilisateurController extends AbstractController {
                 ->add('datenaissance', DateType::class, array(
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
-                ))
-                ->add('dateinscription', DateType::class, array(
-                    'widget' => 'single_text',
-                    'format' => 'yyyy-MM-dd',
-                ))
+                ))              
                 ->add('roles', ChoiceType::class, array(
                     'mapped' => false, 'choices' => array(
                         'Utilisateur' => 'ROLE_USER',
-                        'Administrateur' => 'ROLE_ADMIN',
+                        'Administrateur' => 'ROLE_ADMIN'
                     ),
                 ))
                 ->add('save', SubmitType::class, array('label' => 'Ajouter'))
@@ -48,6 +44,8 @@ class UtilisateurController extends AbstractController {
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
+                $utilisateur->setDateinscription(new \DateTime);
+                $utilisateur->setRoles(array($request->get('form')['roles']));
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($utilisateur);
                 $em->flush();
@@ -61,7 +59,7 @@ class UtilisateurController extends AbstractController {
     /**
      * @Route("/utilisateur_liste", name="utilisateur_liste")
      */
-    public function liste(Request $request, PaginatorInterface $paginator) {
+    public function liste(Request $request) {
 
         $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = new User();
@@ -79,11 +77,8 @@ class UtilisateurController extends AbstractController {
                 $this->getDoctrine()->getManager()->flush();
             }
         }
-        $listeUtilisateurs = $paginator->paginate(
-                $repository->findAll(),
-                $request->query->getInt('page',1),
-                    12
-                );
+        $listeUtilisateurs = $repository->findAll();
+           
 
         return $this->render('utilisateur/liste.html.twig', [
                     'listeUtilisateurs' => $listeUtilisateurs, 'form' => $form->createView(),
@@ -94,9 +89,15 @@ class UtilisateurController extends AbstractController {
      * @Route("/utilisateur_modifier/{id}", name="utilisateur_modifier")
      */
     public function modifier(Request $request) {
+        
+        
         $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = $repository->find($request->get('id'));
-       
+
+        $role = $utilisateur->getRoles();//CES DEUX LIGNES PEUVENT ETRE AMELIOREES JE PENSE 
+        $selected = $role[0];
+    
+      
         $form = $this->createFormBuilder($utilisateur)
                 ->add('username', TextType::class)
                 ->add('nom', TextType::class)
@@ -108,11 +109,19 @@ class UtilisateurController extends AbstractController {
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
                     'disabled' => 'true'))
+                ->add('roles', ChoiceType::class, array(
+                    'mapped' => false, 'choices' => array(
+                        'Utilisateur' => 'ROLE_USER',
+                        'Administrateur' => 'ROLE_ADMIN'
+                    ),
+                    'data' => $selected,
+                ))
                 ->add('save', SubmitType::class, array('label' => 'Modifier'))
                 ->getForm();
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
+                $utilisateur->setRoles(array($request->get('form')['roles']));
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($utilisateur);
                 $em->flush();

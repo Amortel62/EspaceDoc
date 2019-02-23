@@ -27,6 +27,7 @@ class Telechargement
      * @ORM\Column(type="integer")
      */
     private $nb;
+    
     /**
     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="fichiers")
     */
@@ -34,8 +35,9 @@ class Telechargement
 
     /**
     * @ORM\ManyToOne(targetEntity="App\Entity\Fichier")
+    * @ORM\JoinColumn(name="fichier_id", referencedColumnName="id", onDelete="CASCADE") 
     */
-    private $fichier;
+    private $fichier;//JOIN COLUMN IMPORTANT POUR POUVOIR SUPPRIMER UN FICHIER ET SUPPRIMER SES TELECHARGEMENTS LIES !
 
     public function getId(): ?int
     {

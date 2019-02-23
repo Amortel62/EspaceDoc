@@ -5,45 +5,51 @@
         <title>{% block title %}Bienvenue !{% endblock %}</title>
         <link href=" {{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
         <link href=" {{ asset('css/style.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{{ path('accueil') }}">Espace documentation</a>
+        <div class="bg"></div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+            <a class="navbar-brand" href="{{ path('accueil') }}">DocStock</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            {% set  currentPath = path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params')) %}
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item {%if currentPath == '/accueil' or currentPath == '/'%}active{%endif%}">
                         <a class="nav-link" href="{{ path('accueil') }}">Accueil</a>
                     </li>
                     {% if is_granted('ROLE_USER') %}
-                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('fichier_ajout') }}">Ajouter un fichier</a>
-                    </li>
+                        <li class="nav-item {%if currentPath == '/fichier_ajout'%}active{%endif%}">
+                            <a class="nav-link" href="{{ path('fichier_ajout') }}">Ajouter un fichier</a>
+                        </li>
                     {% endif %}
                     {% if is_granted('ROLE_USER') %}
-                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('fichier_maliste') }}">Mes fichiers</a>
-                    </li>
+                        <li class="nav-item {%if currentPath == '/fichier_maliste'%}active{%endif%}">
+                            <a class="nav-link" href="{{ path('fichier_maliste') }}">Mes fichiers</a>
+                        </li>
                     {% endif %}
-                    <li class="nav-item">
+                    <li class="nav-item {%if currentPath == '/faq'%}active{%endif%}">
                         <a class="nav-link" href="{{ path('faq') }}">FAQ</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {%if currentPath == '/apropos'%}active{%endif%}">
                         <a class="nav-link" href="{{ path('apropos') }}">A propos</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {%if currentPath == '/mentions'%}active{%endif%}">
                         <a class="nav-link" href="{{ path('mentions') }}">Mentions légales</a>
                     </li>
                     {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <li class="nav-item"><a class="nav-link" href="{{ path('inscrire') }}">S'inscrire</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Se connecter</a></li>
+                        <li class="nav-item {%if currentPath == '/inscrire'%}active{%endif%}"><a class="nav-link" href="{{ path('inscrire') }}">S'inscrire</a></li>
+                        <li class="nav-item {%if currentPath == '/app_login'%}active{%endif%}"><a class="nav-link" href="{{ path('app_login') }}">Se connecter</a></li>
                         {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{{ path('moncompte') }}">Mon compte</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        <li class="nav-item {%if currentPath == '/moncompte'%}active{%endif%}"><a class="nav-link" href="{{ path('moncompte') }}">Mon compte</a></li>
+                        <li class="nav-item {%if currentPath == '/app_logout'%}active{%endif%}"><a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a></li>
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav_item dropdown">
@@ -56,39 +62,69 @@
                                 <li><a class="dropdown-item" href="{{ path('utilisateur_liste') }}">Liste des
                                         utilisateurs</a></li>
                                 <li role="separator" class="divider"></li>
-                                 <li> Fichier </li>
+                                <li> Fichier </li>
                                 <li><a class="dropdown-item" href="{{ path('fichier_ajout') }}">Ajout
                                         fichier</a></li>
                                 <li><a class="dropdown-item" href="{{ path('fichier_liste') }}">Liste des
                                         fichiers</a></li>
                                 <li role="separator" class="divider"></li>
-                                 <li> Thème </li>
+                                <li> Thème </li>
                                 <li><a class="dropdown-item" href="{{ path('theme_ajout') }}">Ajout
                                         thème</a></li>
                                 <li><a class="dropdown-item" href="{{ path('theme_liste') }}">Liste des
                                         thèmes</a></li>
                                 <li role="separator" class="divider"></li>
-                                  <li> Téléchargements </li>
+                                <li> Téléchargements </li>
                                 <li><a class="dropdown-item" href="{{ path('telechargement_liste') }}">Liste des
                                         téléchargements</a></li>
                                 <li role="separator" class="divider"></li>
-                                 <li><a class="dropdown-item" href="{{ path('download_telechargementlog') }}">Télécharger telechargement.log</a></li>
+                                <li><a class="dropdown-item" href="{{ path('download_telechargementlog') }}">Télécharger telechargement.log</a></li>
                                 <li role="separator" class="divider"></li>
                             </ul>
                         </li>
                     {% endif %}
-                    
+
+
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Taper votre recherche" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
-                </form>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <span class="navbar-text"> Vous êtes connecté en tant que {{ app.user.username }} (Adminitrateur)    </span>
+
+                {% else %}
+                    {% if is_granted('ROLE_USER') %}
+                        <span class="navbar-text"> Vous êtes connecté en tant que {{ app.user.username }} (Utilisateur)    </span>
+
+                    {% endif %}
+                {% endif %}
             </div>
-        </nav>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        </nav>        
+        <div class="container-fluid">
+
+            {% block body %}{% endblock %}
+
+        </div>
+
+
         <script src=" {{ asset('js/jquery-3.3.1.min.js') }}"></script>
         <script src=" {{ asset('js/bootstrap.min.js') }}"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#table').DataTable({
+                    "lengthMenu":  [5,10, 25, 50],
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+                    }
+        
+                }
+                );
+            });
+        </script>
+        {% block javascripts %}{% endblock %}
 
+        <footer class="footer fixed-bottom bg-dark ">
+            <div class="container-fluid">
+                <p>@Copyright 2018-2019 - Yoan Wache</p>
+            </div>
+        </footer>
     </body>
 </html>

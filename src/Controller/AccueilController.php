@@ -64,6 +64,10 @@ class AccueilController extends AbstractController {
                 ->add('datenaissance', DateType::class, array(
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',))
+                ->add('dateinscription', DateType::class, array(
+                    'widget' => 'single_text',
+                    'format' => 'yyyy-MM-dd',
+                    'disabled' => 'true'))
                 ->add('save', SubmitType::class, array('label' => 'Modifier'))
                 ->getForm();
              if ($request->isMethod('POST')) {

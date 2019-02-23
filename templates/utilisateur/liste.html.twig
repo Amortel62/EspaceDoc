@@ -3,55 +3,56 @@
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
-    <h1> Liste des utilisateurs </h1>
+    <h1 class="h1-reponsive mb-5"> Liste des utilisateurs </h1>
 
     {% if not listeUtilisateurs is empty %}
         {{ form_start(form)}} 
-        <table class="table">
-
-            <tr>
-                <th>Utilisateur</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Date de naissance</th>
-                <th>Date d'inscription</th>
-                <th>Rôle</td>
-                <th></th>
-                <th></th>
-            </tr>
-           
-                    {% for key,value in listeUtilisateurs %}
+        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+            <thead>
                 <tr>
-                    <td>{{ value.username }}</td>
-                    <td>{{ value.nom }}</td>
-                    <td>{{ value.prenom }}</td>
-                    <td>{{ value.datenaissance|date("d-m-Y") }}</td>
-                    <td>{{ value.dateinscription|date("d-m-Y") }}</td>
-                    <td>
-                   
-                    {% if value.roles|first == "ROLE_ADMIN" %}
-                            Administrateur
-                        {% else %}
-                        Utilisateur
-                    {% endif %}
-                  
-                    </td>
-                    <td><a href="{{ path('utilisateur_modifier',{'id':value.id})}}" >Modifier</a></td>
-                    <td><input type="checkbox" name="cocher[]" value="{{ value.id }}"/></td>
+                    <th>#</th>
+                    <th>Utilisateur</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de naissance</th>
+                    <th>Date d'inscription</th>
+                    <th>Rôle</td>
+                    <th></th>
+                    <th></th>
                 </tr>
-                    {% endfor %}
+            </thead>
+            <tbody>
+
+                {% for key,value in listeUtilisateurs %}
+                    <tr>
+                        <td>{{ value.id }}</td>
+                        <td>{{ value.username }}</td>
+                        <td>{{ value.nom }}</td>
+                        <td>{{ value.prenom }}</td>
+                        <td>{{ value.datenaissance|date("d-m-Y") }}</td>
+                        <td>{{ value.dateinscription|date("d-m-Y") }}</td>
+                        <td>
+
+                            {% if value.roles|first == "ROLE_ADMIN" %}
+                                Administrateur
+                            {% else %}
+                                Utilisateur
+                            {% endif %}
+
+                        </td>
+                        <td><a href="{{ path('utilisateur_modifier',{'id':value.id})}}" >Modifier</a></td>
+                        <td><input type="checkbox" name="cocher[]" value="{{ value.id }}"/></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
-         <div class="pagination">
-            {{ knp_pagination_render(listeUtilisateurs) }}
-        </div>
-        <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            {{ form_widget(form.save) }}
-        </div>
-    </div>
+
+
+        {{ form_widget(form.save,{'attr':{'class':'btn btn-light float-right'}}) }}
+
         {{ form_end(form)}} 
     {% else %}
         Aucun utilisateur à afficher
     {% endif %}
-    
+
 {% endblock body  %}

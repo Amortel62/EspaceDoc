@@ -90,7 +90,7 @@ class FichierController extends AbstractController {
                     
                     ->add('user', EntityType::class, array(
                         'class' => 'App\Entity\User',
-                        'choice_label' => 'nom'
+                        'choice_label' => 'nom',
                     ))
                     ->add('themes', EntityType::class, array(
                         'class' => 'App\Entity\Theme',
@@ -157,7 +157,7 @@ class FichierController extends AbstractController {
     /**
      * @Route("/fichier_liste", name="fichier_liste")
      */
-    public function liste(Request $request, PaginatorInterface $paginator) {
+    public function liste(Request $request) {
 
         $hasAccess = $this->isGranted('ROLE_ADMIN'); //Renvoie true si l'utilisateur connecté possède le rôle ADMIN
 
@@ -179,9 +179,9 @@ class FichierController extends AbstractController {
             if ($form->isValid()) {//On vérifie qu'il est bien valide
                 
                 $cocher = $request->request->get('cocher'); //On récupère toutes les cases cochées
-                
+    
                 foreach ($cocher as $i) {//Pour chaque case cochée
-                    
+  
                     $u = $repository->find($i); //On récupère les informations liées à la case cochée
                     $this->getDoctrine()->getManager()->remove($u); //On supprime ces dernières
                 }
@@ -193,12 +193,7 @@ class FichierController extends AbstractController {
         }
         if ($hasAccess == true) {//S'il l'utilisateur est bien ADMIN
             
-            $listeFichiers = $paginator->paginate(
-                    $repository->findAll(),
-                    $request->query->getInt('page',1),
-                    6
-            
-            ); //On récupère la liste de tous les fichiers
+            $listeFichiers = $repository->findAll(); //On récupère la liste de tous les fichiers
             
             return $this->render('fichier/liste.html.twig', [
                         'listeFichiers' => $listeFichiers, 
@@ -234,12 +229,9 @@ class FichierController extends AbstractController {
 
         $fichiers = $repository->findBy(['user' => $this->getUser()]); //On récupère les fichiers liés à l'utilisateur en cours
         
-         $fichiers = $paginator->paginate(
-                    $repository->findBy(['user' => $this->getUser()]),
-                    $request->query->getInt('page',1),
-                    12
-            
-            );
+         $fichiers = $repository->findBy(['user' => $this->getUser()])
+                
+            ;
         return $this->render('fichier/maliste.html.twig', [
                     'listeFichiers' => $fichiers, 'form' => $form->createView(),
         ]); //Affiche la page twig lié à ce controller et on transmet le formulaire
