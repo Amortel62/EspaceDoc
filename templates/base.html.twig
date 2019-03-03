@@ -97,7 +97,8 @@
                 {% endif %}
             </div>
         </nav>        
-        <div class="container">
+        <div class="container ">
+           
 
             {% block body %}{% endblock %}
 
@@ -110,7 +111,6 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#table').DataTable({
-                    "scrollX": true,
                     "lengthMenu":  [5,10, 25, 50],
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"

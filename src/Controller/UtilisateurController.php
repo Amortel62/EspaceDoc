@@ -21,7 +21,7 @@ class UtilisateurController extends AbstractController {
      * @Route("/utilisateur_ajout", name="utilisateur_ajout")
      */
     public function ajout(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
-
+         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $utilisateur = new User();
         $form = $this->createFormBuilder($utilisateur)
                 ->add('username', TextType::class)
@@ -60,7 +60,7 @@ class UtilisateurController extends AbstractController {
      * @Route("/utilisateur_liste", name="utilisateur_liste")
      */
     public function liste(Request $request) {
-
+         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = new User();
         $form = $this->createFormBuilder($utilisateur)
@@ -89,7 +89,7 @@ class UtilisateurController extends AbstractController {
      * @Route("/utilisateur_modifier/{id}", name="utilisateur_modifier")
      */
     public function modifier(Request $request) {
-        
+         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = $repository->find($request->get('id'));

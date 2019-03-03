@@ -3,7 +3,7 @@
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
-    <h1 class="h1-reponsive mb-5"> Liste des utilisateurs </h1>
+    <h1 class="mb-5"> Liste des utilisateurs </h1>
 
     {% if not listeUtilisateurs is empty %}
         {{ form_start(form)}} 
@@ -17,8 +17,8 @@
                     <th>Date de naissance</th>
                     <th>Date d'inscription</th>
                     <th>Rôle</td>
-                    <th></th>
-                    <th></th>
+                    <th> Modifier</th>
+                    <th> Supprimer</th>
                 </tr>
             </thead>
             <tbody>

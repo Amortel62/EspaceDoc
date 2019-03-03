@@ -15,6 +15,8 @@ class ThemeController extends AbstractController {
      * @Route("/theme_ajout", name="theme_ajout")
      */
     public function ajout(Request $request) {
+        
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $theme = new Theme();
         $form = $this->createFormBuilder($theme)
                 ->add('libelle', TextType::class)
@@ -39,6 +41,7 @@ class ThemeController extends AbstractController {
      */
     public function liste(Request $request) {
 
+         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $repository = $this->getDoctrine()->getManager()->getRepository(Theme::class);
         $theme = new Theme();
         $form = $this->createFormBuilder($theme)
@@ -67,7 +70,7 @@ class ThemeController extends AbstractController {
      * @Route("/theme_modifier{id}", name="theme_modifier")
      */
     public function modifier(Request $request) {
-
+         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $repository = $this->getDoctrine()->getManager()->getRepository(Theme::class);
 
         $theme = $repository->find($request->get('id'));

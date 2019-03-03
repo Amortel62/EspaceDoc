@@ -16,7 +16,7 @@ class TelechargementController extends AbstractController
      */
     public function liste(Request $request, PaginatorInterface $paginator)
     {
-        
+         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $hasAccess = $this->isGranted('ROLE_ADMIN'); //Renvoie true si l'utilisateur connecté possède le rôle ADMIN
 
         $repository = $this->getDoctrine()->getManager()->getRepository(Telechargement::class); //On récupère les informations de la table Telechargement
@@ -54,7 +54,7 @@ class TelechargementController extends AbstractController
      * @Route("/download_telechargementlog", name="download_telechargementlog")
      */
     public function download_telechargementlog(){
-              
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');     
         return $this->file('C:\xampp\htdocs\futur\logs\telechargement.log'  );
         
     }

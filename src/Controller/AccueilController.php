@@ -55,7 +55,6 @@ class AccueilController extends AbstractController {
      */
     public function moncompte(Request $request) {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $user = $this->getUser();
             $form = $this->createFormBuilder($user)
                 ->add('username', TextType::class)

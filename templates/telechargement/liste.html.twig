@@ -6,42 +6,39 @@
     <h1> Liste des téléchargements </h1>
 
     {% if not listeTelechargements is empty %}
-         {{ form_start(form)}} 
-        <table class="table">
+        {{ form_start(form)}} 
+        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Propriétaire</th>
+                    <th>Nom du fichier</th>
+                    <th>Nom original du fichier</th>
+                    <th>Nombre de téléchargements</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,value in listeTelechargements %}
 
-            <tr>
-                <th>Utilisateur (qui a téléchargé)</th>
-                <th>Utilisateur (propriétaire)</th>
-                <th>Nom du fichier</th>
-                <th>Nom original du fichier</th>
-                <th>Nombre de téléchargements</th>
+                    <tr>
 
-         
-                    {% for key,value in listeTelechargements %}
-            </tr>
-            <tr>
+                        {% if value.user.nom is not null %}
+                            <td>{{ value.user.nom }} / ({{ value.user.username }})</td>
+                        {% else %}
+                            <td>Pas de nom attribué / ({{ value.user.username }}) </td>
+                        {% endif %}
+                        <td>{{ value.fichier.user.username }}</td>
+                        <td>{{ value.fichier.nom}}</td>
+                        <td>{{ value.fichier.nomoriginal}}</td>
+                        <td>{{ value.nb }}</td>
 
-              {% if value.user.nom is not null %}
-                <td>{{ value.user.nom }} / ({{ value.user.username }})</td>
-                {% else %}
-                    <td>Pas de nom attribué / ({{ value.user.username }}) </td>
-                {% endif %}
-                <td>{{ value.fichier.user.username }}</td>
-                <td>{{ value.fichier.nom}}</td>
-                <td>{{ value.fichier.nomoriginal}}</td>
-                <td>{{ value.nb }}</td>
-                
-            </tr>
-                    {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
-        <div class="pagination">
-            {{ knp_pagination_render(listeTelechargements) }}
-        </div>
-         <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            {{ form_widget(form.save) }}
-        </div>
-    </div>
+        
+                {{ form_widget(form.save,{'attr':{'class':'btn btn-light float-right'}}) }}
+
         {{ form_end(form)}}
     {% else %}
         Aucun telechargement à afficher

@@ -3,31 +3,32 @@
 {% block title %}Liste des thèmes{% endblock %}
 
 {% block body %}
-    <h1> Liste des thèmes </h1>
+    <h1 class="mb-5"> Liste des thèmes </h1>
 
     {% if not listeThemes is empty %}
-         {{ form_start(form)}} 
-        <table class="table">
-
-            <tr>
-                <th>Libelle</th>
-                <th></th>
-                <th></th>
-                    {% for key,value in listeThemes %}
-            </tr>
-            <tr>
-                <td><a href="">{{ value.libelle }}</a></td>
-                <td><a href="{{ path('theme_modifier',{'id':value.id})}}">Modifier</td>
-                <td><input type="checkbox" name="cocher[]"value="{{ value.id }}"/></td>
-            </tr>
-                    {% endfor %}
+        {{ form_start(form)}} 
+        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+            <thead>
+                <tr>
+                    <th>Libelle</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead
+            <tbody>
+                {% for key,value in listeThemes %}
+                    <tr>
+                        <td><a href="">{{ value.libelle }}</a></td>
+                        <td><a href="{{ path('theme_modifier',{'id':value.id})}}">Modifier</td>
+                        <td><input type="checkbox" name="cocher[]"value="{{ value.id }}"/></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
-        
-         <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            {{ form_widget(form.save) }}
-        </div>
-    </div>
+
+
+                {{ form_widget(form.save,{'attr':{'class':'btn btn-light float-right'}}) }}
+
         {{ form_end(form)}}
     {% else %}
         Aucun thème à afficher
