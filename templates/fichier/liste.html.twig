@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des fichiers{% endblock %}
+{% block title %}{% trans %}Liste des fichiers{%endtrans%}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5"> Liste des fichiers </h1>
+    <h1 class="mb-5"> {% trans %}Liste des fichiers{%endtrans%} </h1>
 
     {% if not listeFichiers is empty %}
         {{ form_start(form)}} 
-        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display nowrap">
+        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Utilisateur</th>
-                    <th>Thème</th>
-                    <th>Nom</th>
-                    <th>Nom Original</th>
-                    <th>Date</th>
-                    <th>Extension</th>
-                    <th>Taille</th>
+                    <th>{% trans %}Utilisateur{%endtrans%}</th>
+                    <th>{% trans %}Thème{%endtrans%}</th>
+                    <th>{% trans %}Nom{%endtrans%}</th>
+                    <th>{% trans %}Nom Originel{%endtrans%}</th>
+                    <th>{% trans %}Date{%endtrans%}</th>
+                    <th>{% trans %}Extension{%endtrans%}</th>
+                    <th>{% trans %}Taille{%endtrans%}</th>
                     <th><i class="fas fa-edit"></i></th>
                     <th><i class="fas fa-trash-alt"></i></th>
                 </tr>
@@ -45,7 +45,7 @@
                         <td>{{ value.date|date("d-m-Y") }}</td>
                         <td>{{ value.extension }}</td>
                         <td>{{ value.taille }}</td>               
-                        <td><a href="{{ path('fichier_modifier',{'id':value.id})}}">Modifier</a></td>
+                        <td><a href="{{ path('fichier_modifier',{'id':value.id})}}">{% trans %}Modifier{% endtrans %}</a></td>
                         <td><input type="checkbox" name="cocher[]"value="{{ value.id }}"/></td>
                     </tr>
                 {% endfor %}

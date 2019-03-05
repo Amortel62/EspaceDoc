@@ -1,27 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajout de fichier{% endblock %}
+
+
+
+{% block title %}{% trans %}Ajout de fichier{% endtrans %}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">Ajouter un fichier</h1>
-    
+    <h1 class="mb-5">{% trans %}Ajouter un fichier{% endtrans %}</h1>
+
     {{ form_start(form) }}
     {{ form_errors(form) }}
     {% if  is_granted('ROLE_ADMIN') %}
         <div class="input-group mb-3">   
             <div class="input-group-prepend">
-            {{ form_label(form.user, 'Utilisateur :', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.user, 'Utilisateur', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
            
                 {{ form_errors(form.user) }}
                 {{ form_widget(form.user,{'attr':{'class':'form-control'}}) }}
                 {{ form_help(form.user) }}
-    
+               
         </div>
     {% endif %}
     <div class="input-group mb-3">   
             <div class="input-group-prepend">
-        {{ form_label(form.themes, 'Thème:', {'label_attr': {'class': 'input-group-text'}}) }}
+        {{ form_label(form.themes, 'Thème', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
 
             {{ form_errors(form.themes) }}
@@ -31,13 +34,14 @@
     </div>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            {{ form_label(form.nom, 'Fichier:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.nom, 'Fichier', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
         <div class="custom-file">
             {{ form_errors(form.nom) }}
             {{ form_widget(form.nom,{'attr':{'class':'custom-file-input'}}) }}
             {{ form_help(form.nom) }}
-            <label class="custom-file-label" for="">Choisir un fichier</label>
+
+            <label class="custom-file-label" for="">{% trans %}Choisir un fichier{% endtrans %}</label>
         </div>
     </div>
 

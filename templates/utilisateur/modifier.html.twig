@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier l'utilisateur{% endblock %}
+{% block title %}{% trans %}Modifier l'utilisateur{%endtrans%}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">Modifier l'utilisateur => {{ utilisateur.id }} / {{ utilisateur.username }}</h1>
+    <h1 class="mb-5">{% trans %}Modifier l'utilisateur{% endtrans %} => {{ utilisateur.id }} / {{ utilisateur.username }}</h1>
     {{ form_start(form) }}
     {{ form_errors(form) }}
     <div class="input-group mb-3">   
         <div class="input-group-prepend">
-            {{ form_label(form.username, 'Username:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
         {{ form_errors(form.username) }}
         {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
@@ -16,7 +16,7 @@
     </div>
     <div class="input-group mb-3">   
         <div class="input-group-prepend">
-            {{ form_label(form.nom, 'Nom:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
 
         {{ form_errors(form.nom) }}
@@ -27,7 +27,7 @@
 
     <div class="input-group mb-3">   
         <div class="input-group-prepend">
-            {{ form_label(form.prenom, 'Prénom:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
 
         {{ form_errors(form.prenom) }}
@@ -38,7 +38,7 @@
 
     <div class="input-group mb-3">   
         <div class="input-group-prepend">
-            {{ form_label(form.datenaissance, 'Date de naissance:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.datenaissance, 'Date de naissance', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
 
         {{ form_errors(form.datenaissance) }}
@@ -49,7 +49,7 @@
 
     <div class="input-group mb-3">   
         <div class="input-group-prepend">
-            {{ form_label(form.dateinscription, 'Date d\'inscription:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.dateinscription, 'Date d\'inscription', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
 
         {{ form_errors(form.dateinscription) }}
@@ -60,7 +60,7 @@
 
     <div class="input-group mb-3">   
         <div class="input-group-prepend">
-            {{ form_label(form.roles, 'Rôle : ', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.roles, 'Rôle', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
 
         {{ form_errors(form.roles) }}
@@ -70,7 +70,7 @@
 
 
 
-    {{ form_widget(form.save) }}
+    {{ form_widget(form.save,{'attr':{ 'class':'btn btn-secondary float-right'}}) }}
 
 </div>
 

@@ -1,19 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajout thème{% endblock %}
+{% block title %}{% trans %}Ajout thème{%endtrans%}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">Ajouter un thème</h1>
-    
+    <h1 class="mb-5">{% trans %}Ajouter un thème{%endtrans%}</h1>
+
     {{ form_start(form) }}
     {{ form_errors(form) }}
     <div class="input-group mb-3">   
         <div class="input-group-prepend">
-            {{ form_label(form.libelle, 'Libelle:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.libelle, 'Libelle', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
         {{ form_errors(form.libelle) }}
         {{ form_widget(form.libelle,{'attr':{'class':'form-control'}}) }}
         {{ form_help(form.libelle) }}
+    </div>
+    <div class="input-group mb-3">   
+        <div class="input-group-prepend">
+            {{ form_label(form.filiere, 'Filière', {'label_attr': {'class': 'input-group-text'}}) }}
+        </div>
+        {{ form_errors(form.filiere) }}
+        {{ form_widget(form.filiere,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.filiere) }}
     </div>
 
 

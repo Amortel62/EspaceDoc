@@ -8,18 +8,18 @@
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        <h1 class="h1 mb-5">Se connecter</h1>
+        <h1 class="h1 mb-5">{% trans %}Se connecter{% endtrans %}</h1>
         <div class="input-group mb-3">   
             <div class="input-group-prepend">
-                <label for="inputUsername" class="input-group-text">Pseudo</label>
+                <label for="inputUsername" class="input-group-text">{% trans %}Pseudo{% endtrans %}</label>
             </div>
-            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="Pseudo" required autofocus>
+            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{% trans %}Pseudo{% endtrans %}" required autofocus>
         </div>
         <div class="input-group mb-3">   
             <div class="input-group-prepend">
-                <label for="inputPassword" class="input-group-text">Mot de passe</label>
+                <label for="inputPassword" class="input-group-text">{% trans %}Mot de passe{% endtrans %}</label>
             </div>
-            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="{% trans %}Mot de passe{% endtrans %}" required>
         </div>
 
         <input type="hidden" name="_csrf_token"
@@ -38,7 +38,7 @@
         #}
 
         <button class="btn btn-secondary float-right" type="submit">
-            Se connecter
+            {% trans %}Se connecter{% endtrans %}
         </button>
     </form>
 {% endblock %}

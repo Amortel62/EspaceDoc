@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "fzaninotto/faker": "^1.8",
+        "jms/serializer-bundle": "^3.1",
         "knplabs/knp-paginator-bundle": "^2.8",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/apache-pack": "^1.0",
@@ -16,6 +17,7 @@
         "symfony/flex": "^1.1",
         "symfony/form": "4.2.*",
         "symfony/framework-bundle": "4.2.*",
+        "symfony/maker-bundle": "^1.11",
         "symfony/monolog-bundle": "^3.1",
         "symfony/orm-pack": "*",
         "symfony/process": "4.2.*",
@@ -31,7 +33,6 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.1",
         "symfony/debug-pack": "*",
-        "symfony/maker-bundle": "^1.11",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*",
         "symfony/web-server-bundle": "4.2.*"

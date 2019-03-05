@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} - Inscription {% endblock %}
+{% block title %} {{ parent() }} {% trans %} Inscription {% endtrans %} {% endblock %}
 
 {% block body %}
     
         {{ form_start(form) }}
         {{ form_errors(form) }}
         
-        <h1 class="mb-5">S'inscrire</h1>
+        <h1 class="mb-5">{% trans %}S'inscrire{% endtrans %}</h1>
         
         <div class="input-group mb-3">   
             <div class="input-group-prepend">
-            {{ form_label(form.username, 'Pseudo :', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
                 {{ form_errors(form.username) }}
                 {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
@@ -19,11 +19,19 @@
         </div>
         <div class="input-group mb-3">   
             <div class="input-group-prepend">
-            {{ form_label(form.password, 'Mot de passe :', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
                 {{ form_errors(form.password) }}
                 {{ form_widget(form.password,{'attr':{'class':'form-control'}}) }}
                 {{ form_help(form.password) }}
+        </div>
+          <div class="input-group mb-3">   
+            <div class="input-group-prepend">
+            {{ form_label(form.filiere, 'Filière', {'label_attr': {'class': 'input-group-text'}}) }}
+            </div>
+                {{ form_errors(form.filiere) }}
+                {{ form_widget(form.filiere,{'attr':{'class':'form-control'}}) }}
+                {{ form_help(form.filiere) }}
         </div>
     
         {{ form_widget(form.save,{'attr':{ 'class':'btn btn-secondary float-right'}}) }}

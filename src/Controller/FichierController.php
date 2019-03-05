@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Fichier;
 use App\Entity\Telechargement;
+use App\Repository\ThemeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+
+
 
 class FichierController extends AbstractController {
 
@@ -72,15 +75,25 @@ class FichierController extends AbstractController {
     }
 
     /**
-     * @Route("/fichier_ajout", name="fichier_ajout")
+     * @Route({
+        "fr" : "/fichier_ajout",
+     *  "en" : "/file_add",
+     *  "de" : "/datei_hinzufügen",
+     *  "es" : "/archivo_agregar"}, name="fichier_ajout")
      */
     public function ajout(Request $request) {
+
+
+        $filiere = $this->getUser()->getFiliere()->getId();
+
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $hasAccess = $this->isGranted('ROLE_ADMIN'); //Cette variable nous aide à savoir si l'utilisateur est administrateur
         $fichier = new Fichier();
+        
+    
 
         if ($hasAccess) {//Si l'utilisateur connecté est administrateur.        
-            $form = $this->createFormBuilder($fichier)//On créé un formulaire basé                   
+            $form = $this->createFormBuilder($fichier)//On créé un formulaire                  
                     ->add('user', EntityType::class, array(
                         'class' => 'App\Entity\User',
                         'choice_label' => 'nom',
@@ -88,7 +101,7 @@ class FichierController extends AbstractController {
                     ->add('themes', EntityType::class, array(
                         'class' => 'App\Entity\Theme',
                         'choice_label' => 'libelle',
-                        'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur ! 
+                        'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur !
                     ))
                     ->add('nom', FileType::class, array(
                         'label' => 'Fichier à télécharger'
@@ -97,12 +110,15 @@ class FichierController extends AbstractController {
                         'label' => 'Ajouter'
                     ))//Un boutton submit.
                     ->getForm();
-        } else {//Si 'lutilisateur n'est pas connecté: la seule différence est qu'i ne pourra pas choisir l'utilisateur attribué au fichier.
+        } else {//Si 'lutilisateur n'est pas ADMIN: la seule différence est qu'i ne pourra pas choisir l'utilisateur attribué au fichier.
             $form = $this->createFormBuilder($fichier)
                     ->add('themes', EntityType::class, array(
                         'class' => 'App\Entity\Theme',
                         'choice_label' => 'libelle',
-                        'multiple' => true //Obligatoire dans ce cas en ManytoMany : sinon il ne renvoit pas un tableau et affichera une erreur !
+                        'multiple' => true,
+                        'query_builder' => function(ThemeRepository $repository) use($filiere){
+                            return $repository->getThemesByFiliere($filiere);
+                        }
                     ))
                     ->add('nom', FileType::class, array(
                         'label' => 'Fichier à télécharger'
@@ -143,45 +159,69 @@ class FichierController extends AbstractController {
     }
 
     /**
-     * @Route("/fichier_liste", name="fichier_liste")
+     * @Route({
+        "fr" : "/fichier_liste",
+     *  "en" : "/file_list",
+     *  "de" : "/datei_liste",
+     *  "es" : "/archivo_lista"}, name="fichier_liste")
      */
     public function liste(Request $request) {
         
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $hasAccess = $this->isGranted('ROLE_ADMIN'); //Renvoie true si l'utilisateur connecté possède le rôle ADMIN
-        $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class); //On récupère les informations de la table Fichier
-        $fichier = new Fichier(); //On instancie un nouveau Fichier
-        $form = $this->createFormBuilder($fichier)//On créé le formulaire               
+        $hasAccess = $this->isGranted('ROLE_ADMIN');
+        //Renvoie true si l'utilisateur connecté possède le rôle ADMIN
+        $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class);
+        //On récupère les informations de la table Fichier
+        $fichier = new Fichier();
+        //On instancie un nouveau Fichier
+
+        $form = $this->createFormBuilder($fichier)
+            //On créé le formulaire
                 ->add('save', SubmitType::class, array(
                     'attr' => array(
                         'class' => 'save'),
-                    'label' => 'Supprimer'))//Bouton qui permet de supprimer dans la suite du code
+                    'label' => 'Supprimer'))
+            //Bouton qui permet de supprimer dans la suite du code
                 ->getForm(); //Finition       
-        if ($request->isMethod('POST')) {//On récupère les informations du formulaire quand il est envoyé           
-            $form->handleRequest($request); //On traite le formulaire          
-            if ($form->isValid()) {//On vérifie qu'il est bien valide
-                $cocher = $request->request->get('cocher'); //On récupère toutes les cases cochées
+        if ($request->isMethod('POST')) {
+            //On récupère les informations du formulaire quand il est envoyé
+            $form->handleRequest($request);
+            //On traite le formulaire
+            if ($form->isValid()) {
+                //On vérifie qu'il est bien valide
+                $cocher = $request->request->get('cocher');
+                //On récupère toutes les cases cochées
 
-                foreach ($cocher as $i) {//Pour chaque case cochée
-                    $u = $repository->find($i); //On récupère les informations liées à la case cochée
-                    $this->getDoctrine()->getManager()->remove($u); //On supprime ces dernières
+                foreach ($cocher as $i) {
+                    //Pour chaque case cochée
+                    $u = $repository->find($i);
+                    //On récupère les informations liées à la case cochée
+                    $this->getDoctrine()->getManager()->remove($u);
+                    //On supprime ces dernières
                 }
-
-                $this->getDoctrine()->getManager()->flush(); //On met à jour la BD               
+                $this->getDoctrine()->getManager()->flush();
+                //On met à jour la BD
             }
         }
-        if ($hasAccess) {//S'il l'utilisateur est bien ADMIN
-            $listeFichiers = $repository->findAll(); //On récupère la liste de tous les fichiers
+        if ($hasAccess) {
+            //S'il l'utilisateur est bien ADMIN
+            $listeFichiers = $repository->findAll();
+            //On récupère la liste de tous les fichiers
 
             return $this->render('fichier/liste.html.twig', [
                         'listeFichiers' => $listeFichiers,
                         'form' => $form->createView(),
-            ]); //Affiche la page twig lié à ce controller et on transmet le formulaire
+            ]);
+            //Affiche la page twig lié à ce controller et on transmet le formulaire
         }
     }
 
     /**
-     * @Route("/fichier_maliste", name="fichier_maliste")
+     * @Route({
+        "fr" : "/fichier_maliste",
+     *  "en" : "/file_mylist",
+     *  "de" : "/datei_meineliste",
+     *  "es" : "/archivo_milista"}, name="fichier_maliste")
      */
     public function maliste(Request $request) {
 
@@ -216,7 +256,11 @@ class FichierController extends AbstractController {
     }
 
     /**
-     * @Route("/fichier_modifier/{id}", name="fichier_modifier")
+     * @Route({
+        "fr" : "/fichier_modifier/{id}",
+     *  "en" : "/file_edit/{id}",
+     *  "de" : "/datei_bearbeiten/{id}",
+     *  "es" : "/archivo_editar/{id}"}, name="fichier_modifier")
      */
     public function modifier(Request $request) {
 

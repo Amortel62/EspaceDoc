@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajout d'utilisateur{% endblock %}
+{% block title %}{% trans %}Ajout d'utilisateur{% endtrans %}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">Ajouter un utilisateur</h1>
+    <h1 class="mb-5">{% trans %}Ajouter un utilisateur{% endtrans %}</h1>
     {{ form_start(form) }}
     {{ form_errors(form) }}
      <div class="input-group mb-3">   
             <div class="input-group-prepend">
-            {{ form_label(form.username, 'Username:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
                 {{ form_errors(form.username) }}
                 {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
@@ -17,7 +17,7 @@
 
         <div class="input-group mb-3">   
             <div class="input-group-prepend">
-            {{ form_label(form.password, 'Password:', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
                 {{ form_errors(form.password) }}
                 {{ form_widget(form.password,{'attr':{'class':'form-control'}}) }}
@@ -26,7 +26,7 @@
      
     <div class="input-group mb-3">   
             <div class="input-group-prepend">
-        {{ form_label(form.nom, 'Nom :', {'label_attr': {'class': 'input-group-text'}}) }}
+        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
             {{ form_errors(form.nom) }}
             {{ form_widget(form.nom,{'attr':{'class':'form-control'}}) }}
@@ -36,7 +36,7 @@
 
     <div class="input-group mb-3">   
             <div class="input-group-prepend">
-        {{ form_label(form.prenom, 'Prénom :', {'label_attr': {'class': 'input-group-text'}}) }}
+        {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
             {{ form_errors(form.prenom) }}
             {{ form_widget(form.prenom,{'attr':{'class':'form-control'}}) }}
@@ -46,7 +46,7 @@
 
     <div class="input-group mb-3">   
             <div class="input-group-prepend">
-        {{ form_label(form.datenaissance, 'Date de naissance :', {'label_attr': {'class': 'input-group-text'}}) }}
+        {{ form_label(form.datenaissance, 'Date de naissance', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
             {{ form_errors(form.datenaissance) }}
             {{ form_widget(form.datenaissance,{'attr':{'class':'form-control'}}) }}
@@ -57,7 +57,7 @@
         
          <div class="input-group mb-3">   
             <div class="input-group-prepend">
-        {{ form_label(form.roles, 'Rôle : ', {'label_attr': {'class': 'input-group-text'}}) }}
+        {{ form_label(form.roles, 'Rôle', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
             {{ form_errors(form.roles) }}
             {{ form_widget(form.roles,{'attr':{'class':'form-control'}}) }}

@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Bienvenue !{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
         <link href=" {{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
         <link href=" {{ asset('css/style.css') }}" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -22,63 +22,56 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item {%if currentPath == '/accueil' or currentPath == '/'%}active{%endif%}">
-                        <a class="nav-link" href="{{ path('accueil') }}">Accueil</a>
+                    <li class="nav-item {%if currentPath == path('accueil')  or currentPath == '/'%}active{%endif%}">
+                        <a class="nav-link" href="{{ path('accueil') }}">{% trans %}Accueil{% endtrans %}</a>
                     </li>
                     {% if is_granted('ROLE_USER') %}
-                        <li class="nav-item {%if currentPath == '/fichier_ajout'%}active{%endif%}">
-                            <a class="nav-link" href="{{ path('fichier_ajout') }}">Ajouter un fichier</a>
+                        <li class="nav-item {%if currentPath == path('fichier_ajout')%}active{%endif%}">
+                            <a class="nav-link" href="{{ path('fichier_ajout') }}">{% trans %}Ajouter un fichier{% endtrans %}</a>
                         </li>
                     {% endif %}
                     {% if is_granted('ROLE_USER') %}
-                        <li class="nav-item {%if currentPath == '/fichier_maliste'%}active{%endif%}">
-                            <a class="nav-link" href="{{ path('fichier_maliste') }}">Mes fichiers</a>
+                        <li class="nav-item {%if currentPath == path('fichier_maliste')%}active{%endif%}">
+                            <a class="nav-link" href="{{ path('fichier_maliste') }}">{% trans %}Mes fichiers{% endtrans %}</a>
                         </li>
                     {% endif %}
-                    <li class="nav-item {%if currentPath == '/faq'%}active{%endif%}">
-                        <a class="nav-link" href="{{ path('faq') }}">FAQ</a>
+                    <li class="nav-item {%if currentPath == path('faq')%}active{%endif%}">
+                        <a class="nav-link" href="{{ path('faq') }}">{% trans %}FAQ{% endtrans %}</a>
                     </li>
-                    <li class="nav-item {%if currentPath == '/apropos'%}active{%endif%}">
-                        <a class="nav-link" href="{{ path('apropos') }}">A propos</a>
+                    <li class="nav-item {%if currentPath == path('apropos')%}active{%endif%}">
+                        <a class="nav-link" href="{{ path('apropos') }}">{% trans %}A propos{% endtrans %}</a>
                     </li>
-                    <li class="nav-item {%if currentPath == '/mentions'%}active{%endif%}">
-                        <a class="nav-link" href="{{ path('mentions') }}">Mentions légales</a>
+                    <li class="nav-item {%if currentPath == path('mentions')%}active{%endif%}">
+                        <a class="nav-link" href="{{ path('mentions') }}">{% trans %}Mentions légales{% endtrans %}</a>
                     </li>
                     {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <li class="nav-item {%if currentPath == '/inscrire'%}active{%endif%}"><a class="nav-link" href="{{ path('inscrire') }}">S'inscrire</a></li>
-                        <li class="nav-item {%if currentPath == '/app_login'%}active{%endif%}"><a class="nav-link" href="{{ path('app_login') }}">Se connecter</a></li>
+                        <li class="nav-item {%if currentPath == path('inscrire')%}active{%endif%}"><a class="nav-link" href="{{ path('inscrire') }}">{% trans %}S'inscrire{% endtrans %}</a></li>
+                        <li class="nav-item {%if currentPath == path('app_login')%}active{%endif%}"><a class="nav-link" href="{{ path('app_login') }}">{% trans %}Se connecter{% endtrans %}</a></li>
                         {% else %}
-                        <li class="nav-item {%if currentPath == '/moncompte'%}active{%endif%}"><a class="nav-link" href="{{ path('moncompte') }}">Mon compte</a></li>
-                        <li class="nav-item {%if currentPath == '/app_logout'%}active{%endif%}"><a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        <li class="nav-item {%if currentPath ==  path('moncompte')%}active{%endif%}"><a class="nav-link" href="{{ path('moncompte') }}">{% trans %}Mon compte{% endtrans %}</a></li>
+                        <li class="nav-item {%if currentPath ==  path('app_logout')%}active{%endif%}"><a class="nav-link" href="{{ path('app_logout') }}">{% trans %}Se déconnecter{% endtrans %}</a></li>
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav_item dropdown">
                             <a class="nav-link dropdown-toggle" href="{{ path('utilisateur_ajout') }}" id="dropdown01"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans %}Administration{% endtrans %}</a>
                             <ul class="dropdown-menu">
-                                <li> Utilisateur </li>
-                                <li><a class="dropdown-item" href="{{ path('utilisateur_ajout') }}">Ajout
-                                        utilisateur</a></li>
-                                <li><a class="dropdown-item" href="{{ path('utilisateur_liste') }}">Liste des
-                                        utilisateurs</a></li>
+                                <li>{% trans %}Utilisateur {% endtrans %}</li>
+                                <li><a class="dropdown-item" href="{{ path('utilisateur_ajout') }}">{% trans %}Ajout utilisateur{% endtrans %}</a></li>
+                                <li><a class="dropdown-item" href="{{ path('utilisateur_liste') }}">{% trans %}Liste des utilisateurs{% endtrans %}</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li> Fichier </li>
-                                <li><a class="dropdown-item" href="{{ path('fichier_ajout') }}">Ajout
-                                        fichier</a></li>
-                                <li><a class="dropdown-item" href="{{ path('fichier_liste') }}">Liste des
-                                        fichiers</a></li>
+                                <li>{% trans %} Fichier {% endtrans %}</li>
+                                <li><a class="dropdown-item" href="{{ path('fichier_ajout') }}">{% trans %}Ajout fichier{% endtrans %}</a></li>
+                                <li><a class="dropdown-item" href="{{ path('fichier_liste') }}">{% trans %}Liste des fichiers{% endtrans %}</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li> Thème </li>
-                                <li><a class="dropdown-item" href="{{ path('theme_ajout') }}">Ajout
-                                        thème</a></li>
-                                <li><a class="dropdown-item" href="{{ path('theme_liste') }}">Liste des
-                                        thèmes</a></li>
+                                <li> {% trans %}Thème{% endtrans %} </li>
+                                <li><a class="dropdown-item" href="{{ path('theme_ajout') }}">{% trans %}Ajout thème{% endtrans %}</a></li>
+                                <li><a class="dropdown-item" href="{{ path('theme_liste') }}">{% trans %}Liste des thèmes{% endtrans %}</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li> Téléchargements </li>
-                                <li><a class="dropdown-item" href="{{ path('telechargement_liste') }}">Liste des
-                                        téléchargements</a></li>
+                                <li> {% trans %}Téléchargements {% endtrans %}</li>
+                                <li><a class="dropdown-item" href="{{ path('telechargement_liste') }}">{% trans %}Liste des téléchargements{% endtrans %}</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a class="dropdown-item" href="{{ path('download_telechargementlog') }}">Télécharger telechargement.log</a></li>
+                                <li><a class="dropdown-item" href="{{ path('download_telechargementlog') }}">{% trans %}Télécharger telechargement.log{% endtrans %}</a></li>
                                 <li role="separator" class="divider"></li>
                             </ul>
                         </li>
@@ -87,18 +80,18 @@
 
                 </ul>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <span class="navbar-text"> Vous êtes connecté en tant que {{ app.user.username }} (Adminitrateur)    </span>
+                    <span class="navbar-text">{% trans %}Connecté en tant que{%endtrans %} {{ app.user.username }} ({% trans %}Administrateur{% endtrans %})    </span>
 
                 {% else %}
                     {% if is_granted('ROLE_USER') %}
-                        <span class="navbar-text"> Vous êtes connecté en tant que {{ app.user.username }} (Utilisateur)    </span>
+                        <span class="navbar-text">{% trans %}Connecté en tant que{% endtrans %} {{ app.user.username }} | {{ app.user.filiere.nom }}   </span>
 
                     {% endif %}
                 {% endif %}
             </div>
         </nav>        
-        <div class="container ">
-           
+        <div class="container mb-5">
+          
 
             {% block body %}{% endblock %}
 
@@ -112,10 +105,18 @@
             $(document).ready(function () {
                 $('#table').DataTable({
                     "lengthMenu":  [5,10, 25, 50],
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+                        "language": {
+                    {%if app.request.locale == "fr"%}
+                            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+                        {%elseif app.request.locale == "en"%}
+                            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/English.json"
+                        {%elseif app.request.locale == "de"%}
+                            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/German.json"
+                        {%elseif app.request.locale == "es"%}
+                            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                      
+                    {%endif%}
                     }
-        
                 }
                 );
             });

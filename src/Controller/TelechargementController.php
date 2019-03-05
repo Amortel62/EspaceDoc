@@ -12,7 +12,11 @@ use Knp\Component\Pager\PaginatorInterface;
 class TelechargementController extends AbstractController
 {
     /**
-     * @Route("/telechargement_liste", name="telechargement_liste")
+     * @Route({
+        "fr" : "/telechargement_liste",
+     *  "en" : "/download_list",
+     *  "de" : "/herunterladen_liste",
+     *  "es" : "/descargar_lista"}, name="telechargement_liste")
      */
     public function liste(Request $request, PaginatorInterface $paginator)
     {

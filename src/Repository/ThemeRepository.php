@@ -18,6 +18,15 @@ class ThemeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Theme::class);
     }
+    
+    public function getThemesByFiliere($filiere) {//On va chercher les matières (thèmes) associées à la filière de l'utilisateur connecté
+        return $this
+                        ->createQueryBuilder('c')
+                        ->andWhere('c.filiere    = :filiere')
+                        ->setParameter('filiere', $filiere)
+
+        ;
+    }
 
     // /**
     //  * @return Theme[] Returns an array of Theme objects

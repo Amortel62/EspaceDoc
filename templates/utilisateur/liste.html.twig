@@ -1,24 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des utilisateurs{% endblock %}
+{% block title %}{% trans %}Liste des utilisateurs{%endtrans%}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5"> Liste des utilisateurs </h1>
-
+    <h1 class="mb-5">{% trans %}Liste des utilisateurs{%endtrans%} </h1>
     {% if not listeUtilisateurs is empty %}
         {{ form_start(form)}} 
         <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Utilisateur</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Date de naissance</th>
-                    <th>Date d'inscription</th>
-                    <th>Rôle</td>
-                    <th> Modifier</th>
-                    <th> Supprimer</th>
+                    <th>{% trans %}Utilisateur{% endtrans %}</th>
+                    <th>{% trans %}Nom{% endtrans %}</th>
+                    <th>{% trans %}Prénom{% endtrans %}</th>
+                    <th>{% trans %}Date de naissance{% endtrans %}</th>
+                    <th>{% trans %}Date d'inscription{% endtrans %}</th>
+                    <th>{% trans %}Rôle{% endtrans %}</td>
+                    <th>{% trans %}Modifier{% endtrans %}</th>
+                    <th>{% trans %}Supprimer{% endtrans %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +31,6 @@
                         <td>{{ value.datenaissance|date("d-m-Y") }}</td>
                         <td>{{ value.dateinscription|date("d-m-Y") }}</td>
                         <td>
-
                             {% if value.roles|first == "ROLE_ADMIN" %}
                                 Administrateur
                             {% else %}
@@ -40,7 +38,7 @@
                             {% endif %}
 
                         </td>
-                        <td><a href="{{ path('utilisateur_modifier',{'id':value.id})}}" >Modifier</a></td>
+                        <td><a href="{{ path('utilisateur_modifier',{'id':value.id})}}" >{% trans %}Modifier{% endtrans %}</a></td>
                         <td><input type="checkbox" name="cocher[]" value="{{ value.id }}"/></td>
                     </tr>
                 {% endfor %}

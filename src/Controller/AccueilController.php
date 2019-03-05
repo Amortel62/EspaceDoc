@@ -11,20 +11,30 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccueilController extends AbstractController {
 
     /**
-     * @Route("/accueil", name="accueil")   
+     * @Route({
+        "fr" : "/accueil",
+     *  "en" : "/home",
+     *  "de" : "/willkommen",
+     *  "es" : "/bienvenida"}, name="accueil")
      */
-    public function index() {
+    public function index(TranslatorInterface $translator,$locales,$defaultLocale) {
         return $this->render('accueil/index.html.twig', [
                     'controller_name' => 'AccueilController',
         ]);
     }
 
     /**
-     * @Route("/faq", name="faq")
+     * @Route({
+        "fr" : "/faq",
+     *  "en" : "/faq_en",
+     *  "de" : "/hgf",
+     *  "es" : "/pf"}, name="faq")
      */
     public function faq() {
         return $this->render('accueil/faq.html.twig', [
@@ -33,7 +43,11 @@ class AccueilController extends AbstractController {
     }
 
     /**
-     * @Route("/apropos", name="apropos")
+     * @Route({
+        "fr" : "/apropos",
+     *  "en" : "/about",
+     *  "de" : "/über",
+     *  "es" : "/aproposito"}, name="apropos")
      */
     public function apropos() {
         return $this->render('accueil/apropos.html.twig', [
@@ -42,7 +56,11 @@ class AccueilController extends AbstractController {
     }
 
     /**
-     * @Route("/mentions", name="mentions")
+     * @Route({
+        "fr" : "/mentions",
+     *  "en" : "/notice",
+     *  "de" : "/impressum",
+     *  "es" : "/aviso"}, name="mentions")
      */
     public function mentions() {
         return $this->render('accueil/mentions.html.twig', [
@@ -51,7 +69,11 @@ class AccueilController extends AbstractController {
     }
 
     /**
-     * @Route("/moncompte", name="moncompte")
+     * @Route({
+        "fr" : "/moncompte",
+     *  "en" : "/myaccount",
+     *  "de" : "/meinkonto",
+     *  "es" : "/micuenta"}, name="moncompte")
      */
     public function moncompte(Request $request) {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -82,13 +104,21 @@ class AccueilController extends AbstractController {
     }
 
     /**
-     * @Route("/inscrire", name="inscrire")
+     * @Route({
+        "fr" : "/inscrire",
+     *  "en" : "/register",
+     *  "de" : "/registrieren",
+     *  "es" : "/registro"}, name="inscrire")
      */
     public function inscrire(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
         $user = new User();
         $form = $this->createFormBuilder($user)
                 ->add('username', TextType::class)
                 ->add('password', PasswordType::class)
+                ->add('filiere', EntityType::class,array(
+                    'class' =>'App\Entity\Filiere',
+                    'choice_label' => 'nom',
+                ))
                 ->add('save', SubmitType::class, array('label' => 'S\'inscrire'))
                 ->getForm();
 

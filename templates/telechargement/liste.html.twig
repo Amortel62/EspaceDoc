@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des telechargements{% endblock %}
+{% block title %}{% trans %}Liste des téléchargements{% endtrans %} {% endblock %}
 
 {% block body %}
-    <h1> Liste des téléchargements </h1>
+    <h1>{% trans %}Liste des téléchargements{% endtrans %} </h1>
 
     {% if not listeTelechargements is empty %}
         {{ form_start(form)}} 
         <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
             <thead>
                 <tr>
-                    <th>Utilisateur</th>
-                    <th>Propriétaire</th>
-                    <th>Nom du fichier</th>
-                    <th>Nom original du fichier</th>
-                    <th>Nombre de téléchargements</th>
+                    <th>{% trans %}Utilisateur{% endtrans %}</th>
+                    <th>{% trans %}Propriétaire{% endtrans %}</th>
+                    <th>{% trans %}Nom du fichier{% endtrans %}</th>
+                    <th>{% trans %}Nom original du fichier{% endtrans %}</th>
+                    <th>{% trans %}Nombre de téléchargements{% endtrans %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,7 +25,7 @@
                         {% if value.user.nom is not null %}
                             <td>{{ value.user.nom }} / ({{ value.user.username }})</td>
                         {% else %}
-                            <td>Pas de nom attribué / ({{ value.user.username }}) </td>
+                            <td>{% trans %}Pas de nom attribué{% endtrans %} / ({{ value.user.username }}) </td>
                         {% endif %}
                         <td>{{ value.fichier.user.username }}</td>
                         <td>{{ value.fichier.nom}}</td>
@@ -41,6 +41,6 @@
 
         {{ form_end(form)}}
     {% else %}
-        Aucun telechargement à afficher
+       {% trans %}Aucun telechargement à afficher{% endtrans %}
     {% endif %}
 {% endblock %}

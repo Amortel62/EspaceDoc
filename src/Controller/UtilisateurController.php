@@ -18,7 +18,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UtilisateurController extends AbstractController {
 
     /**
-     * @Route("/utilisateur_ajout", name="utilisateur_ajout")
+     * @Route({
+        "fr" : "/utilisateur_ajout",
+     *  "en" : "/user_add",
+     *  "de" : "/nutzer_hinzufügen",
+     *  "es" : "/usuario_agregar"}, name="utilisateur_ajout")
      */
     public function ajout(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
          $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -57,10 +61,14 @@ class UtilisateurController extends AbstractController {
     }
 
     /**
-     * @Route("/utilisateur_liste", name="utilisateur_liste")
+     * @Route({
+        "fr" : "/utilisateur_liste",
+     *  "en" : "/user_list",
+     *  "de" : "/nutzer_liste",
+     *  "es" : "/usuario_lista"}, name="utilisateur_liste")
      */
     public function liste(Request $request) {
-         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
         $utilisateur = new User();
         $form = $this->createFormBuilder($utilisateur)
@@ -86,7 +94,11 @@ class UtilisateurController extends AbstractController {
     }
 
     /**
-     * @Route("/utilisateur_modifier/{id}", name="utilisateur_modifier")
+     * @Route({
+        "fr" : "/utilisateur_modifier/{id}",
+     *  "en" : "/user_edit/{id}",
+     *  "de" : "/nutzer_bearbeiten/{id}",
+     *  "es" : "/usuario_editar/{id}"}, name="utilisateur_modifier")
      */
     public function modifier(Request $request) {
          $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');

@@ -8,11 +8,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 class ThemeController extends AbstractController {
 
     /**
-     * @Route("/theme_ajout", name="theme_ajout")
+     * @Route({
+        "fr" : "/theme_ajout",
+     *  "en" : "/theme_add",
+     *  "de" : "/thema_hinzufügen",
+     *  "es" : "/tema_agregar"}, name="theme_ajout")
      */
     public function ajout(Request $request) {
         
@@ -21,6 +27,10 @@ class ThemeController extends AbstractController {
         $form = $this->createFormBuilder($theme)
                 ->add('libelle', TextType::class)
                 ->add('save', SubmitType::class, array('label' => 'Ajouter'))
+                ->add('filiere', EntityType::class,array(
+                    'class' => 'App\Entity\Filiere',
+                    'choice_label' => 'nom',
+                ))
                 ->getForm();
 
         if ($request->isMethod('POST')) {
@@ -37,7 +47,11 @@ class ThemeController extends AbstractController {
     }
 
     /**
-     * @Route("/theme_liste", name="theme_liste")
+     * @Route({
+        "fr" : "/theme_liste",
+     *  "en" : "/theme_list",
+     *  "de" : "/thema_liste",
+     *  "es" : "/tema_lista"}, name="theme_liste")
      */
     public function liste(Request $request) {
 
@@ -67,7 +81,11 @@ class ThemeController extends AbstractController {
     }
 
     /**
-     * @Route("/theme_modifier{id}", name="theme_modifier")
+     * @Route({
+        "fr" : "/theme_modifier/{id}",
+     *  "en" : "/theme_edit/{id}",
+     *  "de" : "/thema_bearbeiten/{id}",
+     *  "es" : "/tema_editar/{id}"}, name="theme_modifier")
      */
     public function modifier(Request $request) {
          $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -76,6 +94,10 @@ class ThemeController extends AbstractController {
         $theme = $repository->find($request->get('id'));
         $form = $this->createFormBuilder($theme)
                 ->add('libelle', TextType::class)
+                 ->add('filiere', EntityType::class,array(
+                    'class' => 'App\Entity\Filiere',
+                    'choice_label' => 'nom',
+                ))
                 ->add('save', SubmitType::class, array('label' => 'Modifier'))
                 ->getForm();
 

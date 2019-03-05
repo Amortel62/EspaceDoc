@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}{% trans %}Accueil{% endtrans %}{% endblock %}
 
 {% block body %}
 
 
 <div class="jumbotron">
-  <h1 class="display-4">Salut{% if is_granted('IS_AUTHENTICATED_FULLY')  %}, {{ app.user.prenom }} {% endif %} !</h1>
-  <p class="lead">Bienvenue sur DocStock, le site qui te permet de stocker tes documents !</p>
+  <h1 class="display-4">{% trans %}Salut{% endtrans %}{% if is_granted('IS_AUTHENTICATED_FULLY')  %}, {{ app.user.prenom }} {% endif %} !</h1>
+  <p class="lead">{% trans %}Bienvenue sur DocStock, le site qui te permet de stocker tes documents !{% endtrans %}</p>
   <hr class="my-4">
-  <p>Après t'être inscrit il te suffit de choisir ta fillière, pour pouvoir stocker tes documents dans les matières associées !</p>
+  <p>{% trans %}Après t'être inscrit il te suffit de choisir ta fillière, pour pouvoir stocker tes documents dans les matières associées !{% endtrans %}</p>
 </div>
 {% endblock %}

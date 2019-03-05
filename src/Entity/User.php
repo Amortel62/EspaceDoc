@@ -60,6 +60,11 @@ class User implements UserInterface
     * @ORM\OneToMany(targetEntity="App\Entity\Fichier", mappedBy="user", cascade={"remove"})
     */
     private $fichiers;
+    
+    /**
+    * @ORM\ManyToOne(targetEntity="App\Entity\Filiere", inversedBy="users", cascade={"persist"})
+    */
+     private $filiere;
 
     public function __construct()
     {
@@ -214,6 +219,17 @@ class User implements UserInterface
                 $fichier->setUser(null);
             }
         }
+
+        return $this;
+    }
+      public function getFiliere(): ?Filiere
+    {
+        return $this->filiere;
+    }
+
+    public function setFiliere(?Filiere $filiere): self
+    {
+        $this->filiere = $filiere;
 
         return $this;
     }
