@@ -7,10 +7,11 @@
 
     {% if not listeThemes is empty %}
         {{ form_start(form)}} 
-        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+        <table style="width:100%" id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
             <thead>
                 <tr>
                     <th>{% trans %}Libelle{% endtrans %}</th>
+                    <th>{% trans %}Filière{% endtrans %}</th>
                     <th>{% trans %}Modifier{% endtrans %}</th>
                     <th>{% trans %}Supprimer{% endtrans %}</th>
                 </tr>
@@ -18,17 +19,15 @@
             <tbody>
                 {% for key,value in listeThemes %}
                     <tr>
-                        <td><a href="">{{ value.libelle }}</a></td>
+                        <td><a href="{{ path('theme_fichiers_liste',{'id':value.id}) }}">{{ value.libelle }}</a></td>
+                        <td>{{ value.filiere.nom}}</td>
                         <td><a href="{{ path('theme_modifier',{'id':value.id})}}">{% trans %}Modifier{% endtrans %}</td>
                         <td><input type="checkbox" name="cocher[]"value="{{ value.id }}"/></td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-
                 {{ form_widget(form.save,{'attr':{'class':'btn btn-light float-right'}}) }}
-
         {{ form_end(form)}}
     {% else %}
         {% trans %}Aucun thème à afficher{% endtrans %}

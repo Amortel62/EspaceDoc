@@ -7,7 +7,7 @@
 
     {% if not listeFichiers is empty %}
         {{ form_start(form)}} 
-        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+        <table style="width:100%" id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
             <thead>
                 <tr>
                     <th>#</th>
@@ -42,9 +42,9 @@
                         </td>
                         <td><a href="{{ path('download',{'id':value.id}) }}">{{ value.nom }}</a></td>
                         <td>{{ value.nomoriginal }}</td>
-                        <td>{{ value.date|date("d-m-Y") }}</td>
+                        <td>{{ value.date|localizeddate('medium', 'none',app.request.locale) }}</td>
                         <td>{{ value.extension }}</td>
-                        <td>{{ value.taille }}</td>               
+                        <td>{{ value.taille|localizednumber }}</td>               
                         <td><a href="{{ path('fichier_modifier',{'id':value.id})}}">{% trans %}Modifier{% endtrans %}</a></td>
                         <td><input type="checkbox" name="cocher[]"value="{{ value.id }}"/></td>
                     </tr>

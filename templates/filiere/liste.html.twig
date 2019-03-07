@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des filières{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">{% trans %}Liste des filières {% endtrans %}</h1>
+    {% if not listeFiliere is empty %}
+
+        <table style="width:100%" id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans %}Nom{% endtrans %}</th>
+                <th>{% trans %}Libelle{% endtrans %}</th>
+            </tr>
+            </thead
+            <tbody>
+            {% for key,value in listeFiliere %}
+                <tr>
+                    <td>{{ value.id }}</td>
+                    <td>{{ value.nom }}</td>
+                    <td>{{ value.libelle }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        {% trans %}Aucun thème dans cette filière{% endtrans %}
+    {% endif %}
+{% endblock %}

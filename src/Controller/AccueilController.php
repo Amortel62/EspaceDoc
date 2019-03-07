@@ -17,13 +17,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class AccueilController extends AbstractController {
 
     /**
+     * @Route("/redirectafterlogout", name="redirectafterlogout")
+     */
+    public function redirectafterlogout(Request $request) {
+        $referer = $request->headers->get('referer'); //redirige vers la previous page
+        return $this->redirect($referer);
+
+    }
+
+    /**
      * @Route({
         "fr" : "/accueil",
      *  "en" : "/home",
      *  "de" : "/willkommen",
      *  "es" : "/bienvenida"}, name="accueil")
      */
-    public function index(TranslatorInterface $translator,$locales,$defaultLocale) {
+    public function index(TranslatorInterface $translator, $locales, $defaultLocale) {
         return $this->render('accueil/index.html.twig', [
                     'controller_name' => 'AccueilController',
         ]);
@@ -31,7 +40,7 @@ class AccueilController extends AbstractController {
 
     /**
      * @Route({
-        "fr" : "/faq",
+      "fr" : "/faq",
      *  "en" : "/faq_en",
      *  "de" : "/hgf",
      *  "es" : "/pf"}, name="faq")
@@ -44,7 +53,7 @@ class AccueilController extends AbstractController {
 
     /**
      * @Route({
-        "fr" : "/apropos",
+      "fr" : "/apropos",
      *  "en" : "/about",
      *  "de" : "/über",
      *  "es" : "/aproposito"}, name="apropos")
@@ -57,7 +66,7 @@ class AccueilController extends AbstractController {
 
     /**
      * @Route({
-        "fr" : "/mentions",
+      "fr" : "/mentions",
      *  "en" : "/notice",
      *  "de" : "/impressum",
      *  "es" : "/aviso"}, name="mentions")
@@ -70,7 +79,7 @@ class AccueilController extends AbstractController {
 
     /**
      * @Route({
-        "fr" : "/moncompte",
+      "fr" : "/moncompte",
      *  "en" : "/myaccount",
      *  "de" : "/meinkonto",
      *  "es" : "/micuenta"}, name="moncompte")
@@ -78,34 +87,39 @@ class AccueilController extends AbstractController {
     public function moncompte(Request $request) {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
-            $form = $this->createFormBuilder($user)
+        $form = $this->createFormBuilder($user)
                 ->add('username', TextType::class)
-                ->add('nom', TextType::class)
-                ->add('prenom', TextType::class)
+                ->add('nom', TextType::class, array(
+                    'required' => false
+                ))
+                ->add('prenom', TextType::class, array(
+                    'required' => false
+                ))
                 ->add('datenaissance', DateType::class, array(
                     'widget' => 'single_text',
-                    'format' => 'yyyy-MM-dd',))
+                    'format' => 'yyyy-MM-dd',
+                    'required' => false))
                 ->add('dateinscription', DateType::class, array(
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
                     'disabled' => 'true'))
                 ->add('save', SubmitType::class, array('label' => 'Modifier'))
                 ->getForm();
-             if ($request->isMethod('POST')) {
-                $form->handleRequest($request);
-                if ($form->isValid()) {
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($user);
-                    $em->flush();
-                }
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+            }
         }
-        
+
         return $this->render('accueil/moncompte.html.twig', ['form' => $form->createView()]);
     }
 
     /**
      * @Route({
-        "fr" : "/inscrire",
+      "fr" : "/inscrire",
      *  "en" : "/register",
      *  "de" : "/registrieren",
      *  "es" : "/registro"}, name="inscrire")
@@ -115,8 +129,8 @@ class AccueilController extends AbstractController {
         $form = $this->createFormBuilder($user)
                 ->add('username', TextType::class)
                 ->add('password', PasswordType::class)
-                ->add('filiere', EntityType::class,array(
-                    'class' =>'App\Entity\Filiere',
+                ->add('filiere', EntityType::class, array(
+                    'class' => 'App\Entity\Filiere',
                     'choice_label' => 'nom',
                 ))
                 ->add('save', SubmitType::class, array('label' => 'S\'inscrire'))

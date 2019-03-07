@@ -6,7 +6,7 @@
     <h1 class="mb-5">{% trans %}Liste des utilisateurs{%endtrans%} </h1>
     {% if not listeUtilisateurs is empty %}
         {{ form_start(form)}} 
-        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+        <table style="width:100%" id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
             <thead>
                 <tr>
                     <th>#</th>
@@ -28,8 +28,8 @@
                         <td>{{ value.username }}</td>
                         <td>{{ value.nom }}</td>
                         <td>{{ value.prenom }}</td>
-                        <td>{{ value.datenaissance|date("d-m-Y") }}</td>
-                        <td>{{ value.dateinscription|date("d-m-Y") }}</td>
+                        <td>{{ value.datenaissance|localizeddate('medium', 'none',app.request.locale) }}</td>
+                        <td>{{ value.dateinscription|localizeddate('medium', 'none',app.request.locale) }}</td>
                         <td>
                             {% if value.roles|first == "ROLE_ADMIN" %}
                                 Administrateur

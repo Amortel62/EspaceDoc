@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Theme;
+use App\Entity\Fichier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -109,9 +110,29 @@ class ThemeController extends AbstractController {
                 $em->flush();
             }
         }
-        return $this->render('theme/ajout.html.twig', array(
+        return $this->render('theme/modifier.html.twig', array(
                     'form' => $form->createView(),
         ));
     }
+    /**
+    * @Route("/theme_fichiers_liste/{id}", name="theme_fichiers_liste")
+    */
+    public function fichiersByThemeList(Request $request){
 
+        $repository = $this->getDoctrine()->getManager()->getRepository(Theme::class);//On récupère les thèmes
+        $repository2 = $this->getDoctrine()->getManager()->getRepository(Fichier::class);//On récupère les fichiers
+
+        $theme = $repository->find($request->get('id'));//On récupère le thème cliqué
+
+        /* $fichiersTheme = $repository2->findBy(['themes'=> $theme->getId()]);*/ //Le findBy sur une entité en relation Many-to-Many ne semble pas fonctionné
+
+        $fichiersTheme = $repository2->findByTheme($theme);//Je récupère les fichiers du thèmes via un querybuilder dans FichierRepository
+
+        
+        return $this->render('theme/theme_fichiers_liste.html.twig',[
+            'listeFichiersTheme' =>$fichiersTheme,
+            'theme' =>$theme
+        ]);
+                   
+    }
 }

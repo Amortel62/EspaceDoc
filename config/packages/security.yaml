@@ -30,6 +30,7 @@ security:
                 check_path: app_login 
             logout:
                 path: app_logout 
+                target: 'redirectafterlogout'
               
     
 

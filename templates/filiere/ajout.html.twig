@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Ajout filière{%endtrans%}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">{% trans %}Ajouter une filière{%endtrans%}</h1>
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="input-group mb-3">   
+        <div class="input-group-prepend">
+            {{ form_label(form.nom, 'Libelle', {'label_attr': {'class': 'input-group-text'}}) }}
+        </div>
+        {{ form_errors(form.nom) }}
+        {{ form_widget(form.nom,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.nom) }}
+    </div>
+
+
+
+    {{ form_widget(form.save,{'attr':{ 'class':'btn btn-secondary float-right'}}) }}
+
+
+    {{ form_end(form) }}
+{% endblock %}

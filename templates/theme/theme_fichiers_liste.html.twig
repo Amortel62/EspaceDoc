@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Liste des fichiers dans {% endtrans %}  {{ theme.libelle }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">{% trans %}Liste des fichiers dans {% endtrans %}"{{ theme.libelle }}" </h1>
+    {% if not listeFichiersTheme is empty %}
+
+        <table style="width:100%" id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans %}Nom{% endtrans %}</th>
+                <th>{% trans %}Nom Original{% endtrans %}</th>
+                <th>{% trans %}Extension{% endtrans %}</th>
+                <th>{% trans %}Taille{% endtrans %}</th>
+                <th>{% trans %}Utilisateur{% endtrans %}</th>
+                <th>{% trans %}Date{% endtrans %}</th>
+            </tr>
+            </thead
+            <tbody>
+            {% for key,value in listeFichiersTheme %}
+                <tr>
+                    <td>{{ value.id }}</td>
+                    <td><a href="{{ path('download',{'id':value.id}) }}">{{ value.nom }}</a></td>
+                    <td>{{ value.nomoriginal }}</td>
+                    <td>{{ value.extension }}</td>
+                    <td>{{ value.taille }}</td>
+                    <td>{{ value.user.nom }}</td>
+                    <td>{{ value.date|localizeddate('medium','none') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        {% trans %}Aucun fichier dans cette matière{% endtrans %}
+    {% endif %}
+{% endblock %}

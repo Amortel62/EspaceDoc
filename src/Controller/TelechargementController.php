@@ -7,7 +7,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Telechargement;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
 
 class TelechargementController extends AbstractController
 {
@@ -18,9 +17,9 @@ class TelechargementController extends AbstractController
      *  "de" : "/herunterladen_liste",
      *  "es" : "/descargar_lista"}, name="telechargement_liste")
      */
-    public function liste(Request $request, PaginatorInterface $paginator)
+    public function liste(Request $request)
     {
-         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $hasAccess = $this->isGranted('ROLE_ADMIN'); //Renvoie true si l'utilisateur connecté possède le rôle ADMIN
 
         $repository = $this->getDoctrine()->getManager()->getRepository(Telechargement::class); //On récupère les informations de la table Telechargement
@@ -41,12 +40,7 @@ class TelechargementController extends AbstractController
             }
         }
         if ($hasAccess == true) {//S'il l'utilisateur est bien ADMIN
-            $listeTelechargements = $paginator->paginate(
-                    
-                    $repository->findAll(),
-                    $request->query->getInt('page',1),
-                    12
-                    ); //On récupère la liste de tous les telechargement
+            $listeTelechargements = $repository->findAll(); //On récupère la liste de tous les telechargement
             return $this->render('telechargement/liste.html.twig', [
                         'listeTelechargements' => $listeTelechargements, 'form' => $form->createView(),
             ]); //Affiche la page twig lié à ce controller et on transmet le formulaire

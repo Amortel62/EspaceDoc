@@ -1,14 +1,32 @@
 body {
 
-    background-color: rgb(215, 215, 215)
+    background-color: rgb(215, 215, 215);
+
 
 
 }
-footer{
+.footer {
 
-
-    color:lightgrey;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-bottom:-1rem;
+    background-color: #343a40;
     text-align: center;
+    color:white;
+}
 
-
+.ul li{
+    display:inline; /*Tous les li de class ul seront en display: inline, tous sur la même "ligne" '*/
+}
+.ul li a{
+    color: rgba(255, 255, 255, 0.5); /*Tous les liens a de li de class ul auront cette couleur*/
+}
+.ul li a:focus, .ul li a:hover{/*Quand on passe la souris dessus ET quand il est sélectionné'*/
+    text-decoration:none;           /*On enlève les décorations de textes, ici les soulignements des liens */
+    color: rgba(255, 255, 255, 0.75); /*On attribue cette couleur*/
+}
+.ul li.active a{
+    color:#fff; /* On attribue cette couleur sur les liens lorsque li de class ul possède la class active*/
 }

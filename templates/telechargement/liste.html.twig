@@ -7,7 +7,7 @@
 
     {% if not listeTelechargements is empty %}
         {{ form_start(form)}} 
-        <table id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
+        <table style="width:100%" id='table' data-order='[[ 0, "asc" ]]' data-page-length='10' class="display">
             <thead>
                 <tr>
                     <th>{% trans %}Utilisateur{% endtrans %}</th>
@@ -30,7 +30,7 @@
                         <td>{{ value.fichier.user.username }}</td>
                         <td>{{ value.fichier.nom}}</td>
                         <td>{{ value.fichier.nomoriginal}}</td>
-                        <td>{{ value.nb }}</td>
+                        <td>{{ value.nb|localizednumber }}</td>
 
                     </tr>
                 {% endfor %}

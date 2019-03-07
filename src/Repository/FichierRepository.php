@@ -18,7 +18,17 @@ class FichierRepository extends ServiceEntityRepository {
         parent::__construct($registry, Fichier::class);
     }
 
+    public function findByTheme($theme) {
+        return $this
+            ->createQueryBuilder('f')
+            ->join('f.themes', 't')
+            ->andWhere(':theme MEMBER OF f.themes ')
+            ->setParameter('theme',$theme)
+            ->getQuery()
+            ->getResult()
 
+            ;
+    }
     // /**
     //  * @return Fichier[] Returns an array of Fichier objects
     //  */

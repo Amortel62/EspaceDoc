@@ -83,10 +83,9 @@ class FichierController extends AbstractController {
      */
     public function ajout(Request $request) {
 
-
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $filiere = $this->getUser()->getFiliere()->getId();
 
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $hasAccess = $this->isGranted('ROLE_ADMIN'); //Cette variable nous aide à savoir si l'utilisateur est administrateur
         $fichier = new Fichier();
         
@@ -247,7 +246,7 @@ class FichierController extends AbstractController {
 
         $fichiers = $repository->findBy(['user' => $this->getUser()]); //On récupère les fichiers liés à l'utilisateur en cours
 
-        $fichiers = $repository->findBy(['user' => $this->getUser()])
+
 
         ;
         return $this->render('fichier/maliste.html.twig', [
