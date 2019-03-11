@@ -12,6 +12,8 @@
                 <th>#</th>
                 <th>{% trans %}Nom{% endtrans %}</th>
                 <th>{% trans %}Libelle{% endtrans %}</th>
+                <th>{% trans %}Département{% endtrans %}</th>
+                <th>{% trans %}Type du diplôme{% endtrans %}</th>
             </tr>
             </thead
             <tbody>
@@ -20,6 +22,8 @@
                     <td>{{ value.id }}</td>
                     <td>{{ value.nom }}</td>
                     <td>{{ value.libelle }}</td>
+                    <td>{{ value.departement.nom }}</td>
+                    <td>{{ value.typediplome.libelle }}</td>
                 </tr>
             {% endfor %}
             </tbody>

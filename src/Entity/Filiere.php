@@ -34,6 +34,16 @@ class Filiere
     private $themes;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Departement", inversedBy="filieres")
+     */
+    private $departement;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\TypeDiplome", inversedBy="filieres")
+     */
+    private $typediplome;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $libelle;
@@ -132,6 +142,30 @@ class Filiere
     public function setLibelle(?string $libelle): self
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getDepartement(): ?Departement
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?Departement $departement): self
+    {
+        $this->departement = $departement;
+
+        return $this;
+    }
+
+    public function getTypediplome(): ?TypeDiplome
+    {
+        return $this->typediplome;
+    }
+
+    public function setTypediplome(?TypeDiplome $typediplome): self
+    {
+        $this->typediplome = $typediplome;
 
         return $this;
     }
