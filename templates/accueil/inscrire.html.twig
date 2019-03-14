@@ -3,66 +3,82 @@
 {% block title %} {{ parent() }} {% trans %} Inscription {% endtrans %} {% endblock %}
 
 {% block body %}
-    
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-        
-        <h1 class="mb-5">{% trans %}S'inscrire{% endtrans %}</h1>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <h1 class="mb-5">{% trans %}S'inscrire{% endtrans %}</h1>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
             {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}
-            </div>
-                {{ form_errors(form.username) }}
-                {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.username) }}
         </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
+        {{ form_errors(form.username) }}
+        {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.username) }}
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
             {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'input-group-text'}}) }}
-            </div>
-                {{ form_errors(form.password) }}
-                {{ form_widget(form.password,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.password) }}
         </div>
+        {{ form_errors(form.password) }}
+        {{ form_widget(form.password,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.password) }}
+    </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             {{ form_label(form.departement, 'Département', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
         {{ form_errors(form.departement) }}
-        {{ form_widget(form.departement,{'attr':{'class':'form-control'}}) }}
+        {{ form_widget(form.departement,{'attr':{
+            'class':'form-control'}}) }}
         {{ form_help(form.departement) }}
     </div>
-
-
+    <div class="js-filiere-target">
+    {%  if form.children.filiere is defined %}
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            {{ form_label(form.children.filiere, 'Filière', {'label_attr': {'class': 'input-group-text'}}) }}
+            {{ form_label(form.filiere, 'Filière', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
         {{ form_errors(form.children.filiere) }}
         {{ form_widget(form.children.filiere,{'attr':{'class':'form-control'}}) }}
         {{ form_help(form.children.filiere) }}
     </div>
+    {% endif %}
+    </div>
 
-        {{ form_end(form) }}
+{{ form_widget(form.save) }}
+    {{ form_end(form) }}
 
     {% block javascripts %}
-<script>
-window.onload = function () {
-
-    $(document).on('change','#accueil_departement',function () {
-        let $field = $(this)
-        let $form = $field.closest('form')
-        let data = {}
-        data[$field.attr('name')] = $field.val()
-        $.post($form.attr('action'), data).then(function (data) {
-            let $input = $(data).find('#accueil_filiere')
-            $('#accueil_filiere').replaceWith($input)
-        })
-    })
-}
-</script>
-
+     {#   <script>
+            window.onload = function  (){
+            $(document).ready(function() {
+                var $locationSelect = $('.js-departement');
+                var $specificLocationTarget = $('.js-filiere-target');
+                $locationSelect.on('change', function(e) {
+                    $.ajax({
+                        url: $locationSelect.data('filiere-url'),
+                        data: {
+                            departement: $locationSelect.find('option:selected').text()
+                        },
+                        success: function (html) {
+                            if (!html) {
+                                $specificLocationTarget.find('select').remove();
+                                $specificLocationTarget.addClass('d-none');
+                                return;
+                            }
+                            // Replace the current field and show
+                            $specificLocationTarget
+                                .html(html)
+                                .removeClass('d-none')
+                        }
+                    });
+                });
+            });
+            }
+        </script>
+#}
     {% endblock %}
 {% endblock %}

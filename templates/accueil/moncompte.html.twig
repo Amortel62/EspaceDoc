@@ -5,13 +5,44 @@
 {% block body %}
 
     <h1 class="mb-3">{% trans %}Votre Compte{% endtrans %}</h1>
-          
-        <img src="{{ asset('images/img_profile_default.png') }}" alt="..." class="img-thumbnail mb-3">
-        <p>Filière : {{ app.user.filiere.nom }}</p>
-        <p>Département : {{ app.user.filiere.departement.nom }}</p>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
 
-            {{ form_start(form) }}
-            {{ form_errors(form) }}
+
+
+<div class="jumbotron clearfix">
+
+    <img src="{{ asset('images/img_profile_default.png') }}" alt="..." class="img-thumbnail mb-3 float-left">
+    <d1 class="row">
+        <dt class="col-sm-3">Filière :</dt>
+        <dd class="col-sm-9">{{ app.user.filiere.nom }}</dd>
+    </d1>
+    <d1 class="row">
+        <dt class="col-sm-3">Département :</dt>
+        <dd class="col-sm-9">{{ app.user.filiere.departement.nom }}</dd>
+    </d1>
+    <d1 class="row">
+        <dt class="col-sm-3">Pseudo :</dt>
+        <dd class="col-sm-9">{{ app.user.username }}</dd>
+    </d1>
+    <d1 class="row">
+        <dt class="col-sm-3">Nom :</dt>
+        <dd class="col-sm-9">{{ app.user.nom }}</dd>
+    </d1>
+    <d1 class="row">
+        <dt class="col-sm-3">Prénom :</dt>
+        <dd class="col-sm-9">{{ app.user.prenom }}</dd>
+    </d1>
+    <d1 class="row">
+        <dt class="col-sm-3">Date de naissance :</dt>
+        <dd class="col-sm-9">{{ app.user.datenaissance|localizeddate('medium' ,'none') }}</dd>
+    </d1>
+    <d1 class="row">
+        <dt class="col-sm-3">Date d'inscription :</dt>
+        <dd class="col-sm-9">{{ app.user.dateinscription|localizeddate('medium','none') }}</dd>
+    </d1>
+
+</div>
             <div class="input-group mb-3">   
                 <div class="input-group-prepend">
                     {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}

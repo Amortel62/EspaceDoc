@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Departement;
+use App\Entity\Filiere;
 use App\Form\AccueilType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +84,7 @@ class AccueilController extends AbstractController {
 
     /**
      * @Route({
-    "fr" : "/moncompte",
+         "fr" : "/moncompte",
      *  "en" : "/myaccount",
      *  "de" : "/meinkonto",
      *  "es" : "/micuenta"}, name="moncompte")
@@ -120,7 +124,7 @@ class AccueilController extends AbstractController {
 
     /**
      * @Route({
-        "fr" : "/inscrire",
+    "fr" : "/inscrire",
      *  "en" : "/register",
      *  "de" : "/registrieren",
      *  "es" : "/registro"}, name="inscrire")
@@ -144,5 +148,21 @@ class AccueilController extends AbstractController {
 
         return $this->render('accueil/inscrire.html.twig', ['form' => $form->createView()]);
     }
-
+/*
+    /**
+     * @Route("/departement-select", name="departement_select")
+     */
+/*
+    public function getFiliereSelect(Request $request){
+        $departement = new Departement();
+        $departement->setNom($request->get('departement'));
+        $form = $this->createForm(AccueilType::class, $departement);
+        // no field? Return an empty response
+        if (!$form->has('filiere')) {
+            return new Response(null, 204);
+        }
+        return $this->render('accueil/filiere_name.html.twig', [
+            'filiereForm' => $form->createView(),
+        ]);
+    }*/
 }

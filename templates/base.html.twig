@@ -113,7 +113,16 @@
                     );
                 });
         </script>
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            <script>
+                $('.custom-file-input').on('change',function (event) {
+                    var inputFile = event.currentTarget; //DOM node
+                    $(inputFile).parent()
+                        .find('.custom-file-label')
+                        .html(inputFile.files[0].name);//On remplace le contenu du label par le nom de la première entrée du tableau inputFile
+                });
+            </script>
+        {% endblock %}
 
         <div class='footer'>
 
