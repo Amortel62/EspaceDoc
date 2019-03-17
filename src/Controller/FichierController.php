@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Fichier;
 use App\Entity\Telechargement;
+use App\Repository\FichierRepository;
 use App\Repository\ThemeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +28,7 @@ class FichierController extends AbstractController {
     }
 
     private function ecrire_log($errtxt) {
-        $fp = fopen('C:\xampp\htdocs\futur\logs\telechargement.log', 'a+'); // ouvrir le fichier ou le créer
+        $fp = fopen($this->getParameter('logs_directory').'\telechargement.log', 'a+'); // ouvrir le fichier ou le créer
 
         fseek($fp, SEEK_END); // poser le point de lecture à la fin du fichier
         $nouverr = $errtxt . "\r\n"; // ajouter un retour à la ligne au fichier
@@ -36,9 +37,9 @@ class FichierController extends AbstractController {
     }
 
     /**
-     * @Route("/download/{id}", name="download")
+     * @Route("/get_file/{id}", name="get_file")
      */
-    public function download(Request $request) {
+    public function get_file(Request $request) {
 
         $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class);
         $fichier = $repository->find($request->get('id')); // On récupère le fichier grâce à l'id passé dans l'URL
@@ -212,6 +213,8 @@ class FichierController extends AbstractController {
                         'form' => $form->createView(),
             ]);
             //Affiche la page twig lié à ce controller et on transmet le formulaire
+        }else{
+            return $this->redirectToRoute('fichier_maliste');
         }
     }
 
@@ -224,9 +227,9 @@ class FichierController extends AbstractController {
      */
     public function maliste(Request $request) {
 
-         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $repository = $this->getDoctrine()->getManager()->getRepository(Fichier::class); //On récupère les informations de la table Fichier
-        $fichier = new Fichier(); //On instancie une nouvelle instance de Fichier
+        $fichier = new Fichier();
 
         $form = $this->createFormBuilder($fichier)//On créé le formulaire
                 ->add('save', SubmitType::class, array('attr' => array('class' => 'save'), 'label' => 'Supprimer'))//Bouton qui permet de supprimer dans la suite du code
@@ -333,5 +336,24 @@ class FichierController extends AbstractController {
             return $this->maliste($request);
         }
     }
+
+    /**
+     * @Route("/wsFichiers", name="wsFichiers")
+     */
+    public function wsFichiers(Request $request,FichierRepository $repository)
+    {
+        $fichiers = $repository->findAllFilesByUser($this->getUser());
+        for ($i=0;$i<count($fichiers);$i++){
+            $fichier_src = $fichiers[$i]['nom'];
+            $fichierbinary =fread(
+                fopen($this->getParameter('file_directory').'/'.$fichier_src,"r"),
+                filesize($this->getParameter('file_directory').'/'.$fichier_src));
+            $fichiers[$i]['nom'] = base64_encode($fichierbinary);
+
+        }
+        return $this->json($fichiers);
+    }
+
+
 
 }

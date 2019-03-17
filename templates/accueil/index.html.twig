@@ -9,6 +9,10 @@
   <h1 class="display-4">{% trans %}Salut{% endtrans %}{% if is_granted('IS_AUTHENTICATED_FULLY')  %}, {{ app.user.prenom }} {% endif %} !</h1>
   <p class="lead">{% trans %}Bienvenue sur DocStock, le site qui te permet de stocker tes documents !{% endtrans %}</p>
   <hr class="my-4">
-  <p>{% trans %}Après t'être inscrit il te suffit de choisir ta fillière, pour pouvoir stocker tes documents dans les matières associées !{% endtrans %}</p>
+  {% if app.user is empty %}
+  <p>{% trans %}En t'inscrivant, il te suffit de choisir ta fillière pour pouvoir stocker tes documents dans les matières associées !{% endtrans %}</p>
+    {% else %}
+      <p>Maintenant que tu es inscrit, il te suffit d'aller sur la <a href="{{ path('fichier_ajout') }}">page d'ajout de fichier !</a></p>
+  {% endif %}
 </div>
 {% endblock %}

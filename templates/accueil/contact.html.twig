@@ -1,0 +1,43 @@
+{% extends 'base.html.twig.' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+
+    <h1 class="mb-5">{% trans %}Contact{% endtrans %}</h1>
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+    {{ form_label(form.mail, 'Adresse mail', {'label_attr': {'class': 'input-group-text'}}) }}
+        </div>
+    {{ form_errors(form.mail) }}
+    {{ form_widget(form.mail,{'attr':{'class':'form-control',
+                                      'placeholder' : 'Votre Adresse mail'}}) }}
+    {{ form_help(form.mail) }}
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+    {{ form_label(form.objet, 'Objet', {'label_attr': {'class': 'input-group-text'}}) }}
+        </div>
+    {{ form_errors(form.objet) }}
+    {{ form_widget(form.objet,{'attr':{'class':'form-control',
+        'placeholder' : 'Objet du message'}}) }}
+    {{ form_help(form.objet) }}
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+    {{ form_label(form.demande, 'Demande', {'label_attr': {'class': 'input-group-text'}}) }}
+        </div>
+    {{ form_errors(form.demande) }}
+    {{ form_widget(form.demande,{'attr':{'class':'form-control',
+        'placeholder' : 'Votre message',
+        'rows' : '8'}}) }}
+    {{ form_help(form.demande) }}
+    </div>
+    {{ form_widget(form.save,{'attr':
+        {'class': 'btn btn-secondary float-right'}}) }}
+
+    {{ form_end(form) }}
+{% endblock %}

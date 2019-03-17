@@ -16,6 +16,7 @@ class FiliereController extends AbstractController
      */
     public function liste()
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $repository = $this->getDoctrine()->getManager()->getRepository(Filiere::class);
         $listeFiliere = $repository->findAll();
 
@@ -29,6 +30,7 @@ class FiliereController extends AbstractController
      */
     public function ajout(Request $request)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $repository = $this->getDoctrine()->getManager()->getRepository(Filiere::class);
         $filiere = new Filiere();
 

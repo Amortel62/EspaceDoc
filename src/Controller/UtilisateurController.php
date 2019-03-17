@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,11 @@ class UtilisateurController extends AbstractController {
                 ->add('password', PasswordType::class)
                 ->add('nom', TextType::class)
                 ->add('prenom', TextType::class)
+                ->add('filiere', EntityType::class,[
+                    'class' => 'App\Entity\Filiere',
+                    'required' => true,
+                    'choice_label' => 'nom'
+                ])
                 ->add('datenaissance', DateType::class, array(
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
@@ -121,6 +127,11 @@ class UtilisateurController extends AbstractController {
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
                     'disabled' => 'true'))
+                ->add('filiere',EntityType::class,[
+                    'class' => 'App\Entity\Filiere',
+                    'choice_label' => 'nom',
+                    'required' => false,
+                ])
                 ->add('roles', ChoiceType::class, array(
                     'mapped' => false, 'choices' => array(
                         'Utilisateur' => 'ROLE_USER',

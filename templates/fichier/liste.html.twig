@@ -40,7 +40,7 @@
                                 {% endif %}
                             {% endfor %}
                         </td>
-                        <td><a href="{{ path('download',{'id':value.id}) }}">{{ value.nom }}</a></td>
+                        <td><a href="{{ path('get_file',{'id':value.id}) }}">{{ value.nom }}</a></td>
                         <td>{{ value.nomoriginal }}</td>
                         <td>{{ value.date|localizeddate('medium', 'none',app.request.locale) }}</td>
                         <td>{{ value.extension }}</td>

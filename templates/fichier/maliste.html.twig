@@ -25,7 +25,7 @@
                 {% for key,value in listeFichiers %}
 
                     <tr>
-                        <td><a href="{{ path('download',{'id':value.id}) }}">{{ value.nom }}</a></td>
+                        <td><a href="{{ path('get_file',{'id':value.id}) }}">{{ value.nom }}</a></td>
                         <td>{{ value.nomoriginal }}</td>
                         <td>{% for key,value in value.themes %}
                             {% if loop.last ==  false%}

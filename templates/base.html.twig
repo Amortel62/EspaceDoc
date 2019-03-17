@@ -17,8 +17,12 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            {% if app.request.attributes.get('_route_params') is not empty %}
             {% set  currentPath = path(app.request.attributes.get('_route'),
                        app.request.attributes.get('_route_params')) %}
+                 {% else %}
+                {% set currentPath = ''%}
+            {% endif %}
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item {%if currentPath == path('accueil')  or currentPath == '/'%}active{%endif%}">
@@ -28,8 +32,6 @@
                         <li class="nav-item {%if currentPath == path('fichier_ajout')%}active{%endif%}">
                             <a class="nav-link" href="{{ path('fichier_ajout') }}"><i class="fas fa-file-export"></i> {% trans %}Ajouter un fichier{% endtrans %}</a>
                         </li>
-                    {% endif %}
-                    {% if is_granted('ROLE_USER') %}
                         <li class="nav-item {%if currentPath == path('fichier_maliste')%}active{%endif%}">
                             <a class="nav-link" href="{{ path('fichier_maliste') }}"><i class="fas fa-file-import"></i> {% trans %}Mes fichiers{% endtrans %}</a>
                         </li>
@@ -42,7 +44,9 @@
                         <li class="nav-item {%if currentPath ==  path('moncompte')%}active{%endif%}"><a class="nav-link" href="{{ path('moncompte') }}"><i class="fas fa-user"></i> {% trans %}Mon compte{% endtrans %}</a></li>
                         <li class="nav-item {%if currentPath ==  path('app_logout')%}active{%endif%}"><a class="nav-link" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> {% trans %}Se déconnecter{% endtrans %}</a></li>
                         {% endif %}
-                        {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item {%if currentPath ==  path('contact')%}active{%endif%}"><a class="nav-link" href="{{ path('contact') }}"><i class="fas fa-user"></i> {% trans %}Contact{% endtrans %}</a></li>
+
+                    {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav_item dropdown">
                             <a class="nav-link dropdown-toggle" href="{{ path('utilisateur_ajout') }}" id="dropdown01"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-unlock-alt"></i> {% trans %}Administration{% endtrans %}</a>

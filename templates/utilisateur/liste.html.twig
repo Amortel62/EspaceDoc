@@ -15,6 +15,7 @@
                     <th>{% trans %}Prénom{% endtrans %}</th>
                     <th>{% trans %}Date de naissance{% endtrans %}</th>
                     <th>{% trans %}Date d'inscription{% endtrans %}</th>
+                    <th>{% trans %}Filière{% endtrans %}</th>
                     <th>{% trans %}Rôle{% endtrans %}</td>
                     <th>{% trans %}Modifier{% endtrans %}</th>
                     <th>{% trans %}Supprimer{% endtrans %}</th>
@@ -30,6 +31,7 @@
                         <td>{{ value.prenom }}</td>
                         <td>{{ value.datenaissance|localizeddate('medium', 'none',app.request.locale) }}</td>
                         <td>{{ value.dateinscription|localizeddate('medium', 'none',app.request.locale) }}</td>
+                        <td>{{ value.filiere.nom }}</td>
                         <td>
                             {% if value.roles|first == "ROLE_ADMIN" %}
                                 Administrateur

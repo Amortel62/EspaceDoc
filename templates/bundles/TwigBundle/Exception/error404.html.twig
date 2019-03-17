@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <div class="jumbotron">
+        <h1 class="mb-3 ">ERREUR {{ status_code }} !</h1>
+        <p>La page recherchée n'existe pas !</p>
+        <p>Pour contacter un administrateur : Page Contact</p>
+        <p>Retour à <a href="{{ path('accueil') }}">l'accueil</a></p>
+    </div>
+
+{% endblock %}

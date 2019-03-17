@@ -6,67 +6,76 @@
     <h1 class="mb-5">{% trans %}Ajouter un utilisateur{% endtrans %}</h1>
     {{ form_start(form) }}
     {{ form_errors(form) }}
-     <div class="input-group mb-3">   
-            <div class="input-group-prepend">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
             {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}
-            </div>
-                {{ form_errors(form.username) }}
-                {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.username) }}
-            </div>
+        </div>
+        {{ form_errors(form.username) }}
+        {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.username) }}
+    </div>
 
-        <div class="input-group mb-3">   
-            <div class="input-group-prepend">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
             {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'input-group-text'}}) }}
-            </div>
-                {{ form_errors(form.password) }}
-                {{ form_widget(form.password,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.password) }}
-            </div>
-     
-    <div class="input-group mb-3">   
-            <div class="input-group-prepend">
-        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
-            {{ form_errors(form.nom) }}
-            {{ form_widget(form.nom,{'attr':{'class':'form-control'}}) }}
-            {{ form_help(form.nom) }}
+        {{ form_errors(form.password) }}
+        {{ form_widget(form.password,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.password) }}
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            {{ form_label(form.filiere, 'Filiere', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
+        {{ form_errors(form.filiere) }}
+        {{ form_widget(form.filiere,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.filiere) }}
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'input-group-text'}}) }}
+        </div>
+        {{ form_errors(form.nom) }}
+        {{ form_widget(form.nom,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.nom) }}
+    </div>
 
 
-    <div class="input-group mb-3">   
-            <div class="input-group-prepend">
-        {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'input-group-text'}}) }}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
-            {{ form_errors(form.prenom) }}
-            {{ form_widget(form.prenom,{'attr':{'class':'form-control'}}) }}
-            {{ form_help(form.prenom) }}
-        </div>
+        {{ form_errors(form.prenom) }}
+        {{ form_widget(form.prenom,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.prenom) }}
+    </div>
 
 
-    <div class="input-group mb-3">   
-            <div class="input-group-prepend">
-        {{ form_label(form.datenaissance, 'Date de naissance', {'label_attr': {'class': 'input-group-text'}}) }}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            {{ form_label(form.datenaissance, 'Date de naissance', {'label_attr': {'class': 'input-group-text'}}) }}
         </div>
-            {{ form_errors(form.datenaissance) }}
-            {{ form_widget(form.datenaissance,{'attr':{'class':'form-control'}}) }}
-            {{ form_help(form.datenaissance) }}
-        </div>
-   
-  
-        
-         <div class="input-group mb-3">   
-            <div class="input-group-prepend">
-        {{ form_label(form.roles, 'Rôle', {'label_attr': {'class': 'input-group-text'}}) }}
-        </div>
-            {{ form_errors(form.roles) }}
-            {{ form_widget(form.roles,{'attr':{'class':'form-control'}}) }}
-            {{ form_help(form.roles) }}
-        </div>
-   
+        {{ form_errors(form.datenaissance) }}
+        {{ form_widget(form.datenaissance,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.datenaissance) }}
+    </div>
 
 
-            {{ form_widget(form.save,{'attr':{ 'class':'btn btn-secondary float-right'}}) }}
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            {{ form_label(form.roles, 'Rôle', {'label_attr': {'class': 'input-group-text'}}) }}
+        </div>
+        {{ form_errors(form.roles) }}
+        {{ form_widget(form.roles,{'attr':{'class':'form-control'}}) }}
+        {{ form_help(form.roles) }}
+    </div>
+
+
+
+    {{ form_widget(form.save,{'attr':{ 'class':'btn btn-secondary float-right'}}) }}
 
 
 

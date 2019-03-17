@@ -10,102 +10,140 @@
 
 
 
-<div class="jumbotron clearfix">
+    <div class="jumbotron clearfix">
+        {% if app.user.imageFileName is not empty %}
+            <img src="{{ asset('images/profile/')}}{{ app.user.imageFileName }}" alt="..." class="profile img-thumbnail mb-3 float-left">
+        {% else %}
+            <img src="{{ asset('images/img_profile_default.png') }}" alt="..." class="profile img-thumbnail mb-3 float-left">
+        {% endif %}
+        <d1 class="row">
+            <dt class="col-sm-2">Filière :</dt>
+            <dd class="col-sm-3">{{ app.user.filiere.nom }}</dd>
+            <dt class="col-sm-4">Date de naissance :</dt>
+            <dd class="col-sm-3">{{ app.user.datenaissance|localizeddate('medium' ,'none') }}</dd>
+        </d1>
+        <d1 class="row">
+            <dt class="col-sm-2">Département :</dt>
+            <dd class="col-sm-3">{{ app.user.filiere.departement.nom }}</dd>
+            <dt class="col-sm-4">Date d'inscription :</dt>
+            <dd class="col-sm-3">{{ app.user.dateinscription|localizeddate('medium','none') }}</dd>
+        </d1>
+        <d1 class="row">
+            <dt class="col-sm-2">Pseudo :</dt>
+            <dd class="col-sm-3">{{ app.user.username }}</dd>
+            <dt class="col-sm-4">Nombre de fichiers :</dt>
+            <dd class="col-sm-3">{{ nb }}</dd>
+        </d1>
+        <d1 class="row">
+            <dt class="col-sm-2">Nom :</dt>
+            <dd class="col-sm-9">{{ app.user.nom }}</dd>
+        </d1>
+        <d1 class="row">
+            <dt class="col-sm-2">Prénom :</dt>
+            <dd class="col-sm-9">{{ app.user.prenom }}</dd>
+        </d1>
 
-    <img src="{{ asset('images/img_profile_default.png') }}" alt="..." class="img-thumbnail mb-3 float-left">
-    <d1 class="row">
-        <dt class="col-sm-3">Filière :</dt>
-        <dd class="col-sm-9">{{ app.user.filiere.nom }}</dd>
-    </d1>
-    <d1 class="row">
-        <dt class="col-sm-3">Département :</dt>
-        <dd class="col-sm-9">{{ app.user.filiere.departement.nom }}</dd>
-    </d1>
-    <d1 class="row">
-        <dt class="col-sm-3">Pseudo :</dt>
-        <dd class="col-sm-9">{{ app.user.username }}</dd>
-    </d1>
-    <d1 class="row">
-        <dt class="col-sm-3">Nom :</dt>
-        <dd class="col-sm-9">{{ app.user.nom }}</dd>
-    </d1>
-    <d1 class="row">
-        <dt class="col-sm-3">Prénom :</dt>
-        <dd class="col-sm-9">{{ app.user.prenom }}</dd>
-    </d1>
-    <d1 class="row">
-        <dt class="col-sm-3">Date de naissance :</dt>
-        <dd class="col-sm-9">{{ app.user.datenaissance|localizeddate('medium' ,'none') }}</dd>
-    </d1>
-    <d1 class="row">
-        <dt class="col-sm-3">Date d'inscription :</dt>
-        <dd class="col-sm-9">{{ app.user.dateinscription|localizeddate('medium','none') }}</dd>
-    </d1>
+        <button type="button" id="hiddenReveal" class="btn btn-secondary float-right">Modifier</button>
 
-</div>
-            <div class="input-group mb-3">   
-                <div class="input-group-prepend">
-                    {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}
-                </div>
-                {{ form_errors(form.username) }}
-                {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.username) }}
+    </div>
+    <div class="d-none" id="hide">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                {{ form_label(form.imageFile, 'Image de profil', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
-            <div class="input-group mb-3">   
-                <div class="input-group-prepend">
-                    {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'input-group-text'}}) }}
-                </div>
-                {{ form_errors(form.nom) }}
-                {{ form_widget(form.nom,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.nom) }}
+            <div class="custom-file">
+                {{ form_errors(form.imageFile) }}
+                {{ form_widget(form.imageFile,{'attr':{'class':'custom-file-input'}}) }}
+                {{ form_help(form.imageFile) }}
+                <label class="custom-file-label" for="">{% trans %}Choisir un fichier{% endtrans %}</label>
             </div>
-
-
-            <div class="input-group mb-3">   
-                <div class="input-group-prepend">
-                    {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'input-group-text'}}) }}
-                </div>
-                {{ form_errors(form.prenom) }}
-                {{ form_widget(form.prenom,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.prenom) }}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                {{ form_label(form.username, 'Pseudo', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
-
-
-            <div class="input-group mb-3">   
-                <div class="input-group-prepend">
-                    {{ form_label(form.datenaissance, 'Date de naissance', {'label_attr': {'class': 'input-group-text'}}) }}
-                </div>
-                {{ form_errors(form.datenaissance) }}
-                {{ form_widget(form.datenaissance,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.datenaissance) }}
+            {{ form_errors(form.username) }}
+            {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
+            {{ form_help(form.username) }}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
+            {{ form_errors(form.nom) }}
+            {{ form_widget(form.nom,{'attr':{'class':'form-control'}}) }}
+            {{ form_help(form.nom) }}
+        </div>
 
 
-            <div class="input-group mb-3">   
-                <div class="input-group-prepend">
-                    {{ form_label(form.dateinscription, 'Date d\'inscription', {'label_attr': {'class': 'input-group-text'}}) }}
-                </div>
-                {{ form_errors(form.dateinscription) }}
-                {{ form_widget(form.dateinscription,{'attr':{'class':'form-control'}}) }}
-                {{ form_help(form.dateinscription) }}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'input-group-text'}}) }}
             </div>
+            {{ form_errors(form.prenom) }}
+            {{ form_widget(form.prenom,{'attr':{'class':'form-control'}}) }}
+            {{ form_help(form.prenom) }}
+        </div>
+
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                {{ form_label(form.datenaissance, 'Date de naissance', {'label_attr': {'class': 'input-group-text'}}) }}
+            </div>
+            {{ form_errors(form.datenaissance) }}
+            {{ form_widget(form.datenaissance,{'attr':{'class':'form-control'}}) }}
+            {{ form_help(form.datenaissance) }}
+        </div>
+
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                {{ form_label(form.dateinscription, 'Date d\'inscription', {'label_attr': {'class': 'input-group-text'}}) }}
+            </div>
+            {{ form_errors(form.dateinscription) }}
+            {{ form_widget(form.dateinscription,{'attr':{'class':'form-control'}}) }}
+            {{ form_help(form.dateinscription) }}
+        </div>
 
 
 
 
-            {{ form_widget(form.save,{'attr':{ 'class':'btn btn-secondary float-right'}}) }}
+        {{ form_widget(form.save,{'attr':{ 'class':'btn btn-secondary float-right'}}) }}
 
 
-            {{ form_end(form) }}
+        {{ form_end(form) }}
 
 
 
-            {% if app.user.nom is null or app.user.prenom is null or app.user.datenaissance is null %}
+        {% if app.user.nom is null or app.user.prenom is null or app.user.datenaissance is null %}
 
-                <p> Veuillez compléter votre profil :
-                    {% if app.user.nom is null %}Nom{% endif %}
-                    {% if app.user.prenom is null %}Prénom{% endif %}
-                    {% if app.user.datenaissance is null %}Date de naissance{% endif %}</P>
-                {% endif %}
+            <p>Veuillez compléter votre profil :
+                {% if app.user.nom is null %}Nom{% endif %}
+                {% if app.user.prenom is null %}Prénom{% endif %}
+                {% if app.user.datenaissance is null %}Date de naissance{% endif %}</P>
+        {% endif %}
+    </div>
+    {% block javascripts %}
+        <script>
 
-        {% endblock %}
+            document.getElementById('hiddenReveal').addEventListener('click',hiddenReveal);
+
+            function hiddenReveal() {
+
+                var element = document.getElementById('hide');
+                var buttonElement = document.getElementById('hiddenReveal');
+
+                if(element.classList.contains('d-none')){
+
+                    element.classList.remove('d-none');
+                    buttonElement.classList.add('d-none');
+
+                }
+            }
+
+        </script>
+
+
+    {% endblock %}
+
+{% endblock %}

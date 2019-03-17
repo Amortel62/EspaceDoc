@@ -7,8 +7,8 @@ parameters:
     locale: 'fr'
     app_locales: fr|en|de|es
     file_directory: '%kernel.project_dir%/uploads/fichiers'
+    image_directory: '%kernel.project_dir%/public/images/profile'
     logs_directory: '%kernel.project_dir%/logs'
-    
 
 services:
     # default configuration for services in *this* file

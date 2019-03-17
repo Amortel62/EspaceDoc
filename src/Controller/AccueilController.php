@@ -2,24 +2,28 @@
 
 namespace App\Controller;
 
-use App\Entity\Departement;
-use App\Entity\Filiere;
+use App\Entity\Fichier;
 use App\Form\AccueilType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccueilController extends AbstractController {
+
+    private function generateUniqueFileName() {
+        return md5(uniqid());
+    }
 
     /**
      * @Route("/redirectafterlogout", name="redirectafterlogout")
@@ -43,6 +47,61 @@ class AccueilController extends AbstractController {
         ]);
     }
 
+    /**
+     * @Route({
+     *     "fr" : "/contact",}, name="contact")
+     */
+    public function contact(\Swift_Mailer $mailer,Request $request){
+
+        $form= $this->createFormBuilder()
+            ->add('mail',EmailType::class,[
+                'required' => true
+            ])
+            ->add('objet',TextType::class,[
+                'required' => false
+            ])
+            ->add('demande',TextareaType::class,[
+                'required' => true
+            ])
+            ->add('save',SubmitType::class,[
+                'label' => 'Envoyer'
+            ])
+            ->getForm();
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid()){
+                $message = (new \Swift_Message($form->get('objet')->getData()))
+                    ->setFrom($form->get('mail')->getData())
+                    ->setTo('testmailingdevsymfony@gmail.com')
+                    ->setBody(
+                        $this->renderView(
+                        'emails/messageContact.html.twig',
+                        ['demande' => $form->get('demande')->getData(),
+                        'sujet' => $form->get('objet')->getData()]
+                    ),
+                        'text/html')
+                ;
+                $accuseReception = (new \Swift_Message('Accusé de réception'))
+                    ->setFrom('testmailingdevsymfony@gmail.com')
+                    ->setTo($form->get('mail')->getData())
+                    ->setBody(  $this->renderView(
+                        'emails/accuse.html.twig',
+                        ['demande' => $form->get('demande')->getData(),
+                            'sujet' => $form->get('objet')->getData()]
+                    ),
+                        'text/html')
+                ;
+
+                $mailer->send($message);
+                $mailer->send($accuseReception);
+            }
+        }
+        return $this->render('accueil/contact.html.twig',[
+            'form' => $form->createView(),
+            'controller_name' => 'AccueilController',
+        ]);
+    }
     /**
      * @Route({
     "fr" : "/faq",
@@ -93,6 +152,14 @@ class AccueilController extends AbstractController {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
         $form = $this->createFormBuilder($user)
+            ->add('imageFile',FileType::class,[
+                'mapped' => false,
+                'label' => 'Choisir une image de profil',
+                'required' => false,
+                'constraints' => new Image([
+                    'maxSize' => '150k',
+                ])
+            ])
             ->add('username', TextType::class)
             ->add('nom', TextType::class, array(
                 'required' => false
@@ -110,16 +177,47 @@ class AccueilController extends AbstractController {
                 'disabled' => 'true'))
             ->add('save', SubmitType::class, array('label' => 'Modifier'))
             ->getForm();
+
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $form['imageFile']->getData(); //On récupère les données de l'image dans l'input file du form
+
+                if($uploadedFile){ //Si ce qu'on récupère est truthy
+
+                    $oldFileName = $this->getUser()->getImageFileName(); //On récupère le nom de l'image de profile de l'utilisateur
+                    $folder =  $this->getParameter('image_directory'); //On récupère le chemin d'upload des images de profiles
+
+                    if($oldFileName){ //Si l'utilisateur a déjà une image de profil
+                        $oldFile = $folder .'/'. $oldFileName ; //On récupère le chemin de celle-ci
+                        unlink($oldFile); //On l'efface
+                    }
+
+                    $newFilename = $this->generateUniqueFileName() .'.'. $uploadedFile->guessExtension();
+
+                    $uploadedFile->move(
+                        $folder,
+                        $newFilename
+                    );
+
+                    $user->setImageFileName($newFilename);
+
+                }
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
                 $em->flush();
             }
         }
+        //A améliorer
+        $repository  = $this->getDoctrine()->getManager()->getRepository(Fichier::class);
+        $fichiers = $repository->findBy(['user' => $this->getUser()]); //On récupère les fichiers liés à l'utilisateur en cours
+        $nombreDeFichiersUploads = count($fichiers);
 
-        return $this->render('accueil/moncompte.html.twig', ['form' => $form->createView()]);
+        return $this->render('accueil/moncompte.html.twig', [
+            'nb'   => $nombreDeFichiersUploads,
+            'form' => $form->createView()]);
     }
 
     /**

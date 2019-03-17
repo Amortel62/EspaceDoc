@@ -39,12 +39,10 @@ class TelechargementController extends AbstractController
                 $this->getDoctrine()->getManager()->flush(); //On met à jour la BD
             }
         }
-        if ($hasAccess == true) {//S'il l'utilisateur est bien ADMIN
             $listeTelechargements = $repository->findAll(); //On récupère la liste de tous les telechargement
             return $this->render('telechargement/liste.html.twig', [
                         'listeTelechargements' => $listeTelechargements, 'form' => $form->createView(),
             ]); //Affiche la page twig lié à ce controller et on transmet le formulaire
-        }
     }
     
     
@@ -53,7 +51,7 @@ class TelechargementController extends AbstractController
      */
     public function download_telechargementlog(){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');     
-        return $this->file('C:\xampp\htdocs\futur\logs\telechargement.log'  );
+        return $this->file($this->getParameter('logs_directory').'\telechargement.log'  );
         
     }
     

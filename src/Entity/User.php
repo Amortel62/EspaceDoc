@@ -69,6 +69,11 @@ class User implements UserInterface
     */
      private $filiere;
 
+     /**
+      * @ORM\Column(type="string", length=255, nullable=true)
+      */
+     private $imageFileName;
+
 
     public function __construct()
     {
@@ -234,6 +239,18 @@ class User implements UserInterface
     public function setFiliere(?Filiere $filiere): self
     {
         $this->filiere = $filiere;
+
+        return $this;
+    }
+
+    public function getImageFileName(): ?string
+    {
+        return $this->imageFileName;
+    }
+
+    public function setImageFileName(?string $imageFileName): self
+    {
+        $this->imageFileName = $imageFileName;
 
         return $this;
     }

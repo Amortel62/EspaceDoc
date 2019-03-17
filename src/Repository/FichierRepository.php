@@ -29,6 +29,18 @@ class FichierRepository extends ServiceEntityRepository {
 
             ;
     }
+
+    public function findAllFilesByUser($user){
+        return $this
+            ->createQueryBuilder('f')
+            ->join('f.user', 'u')
+            ->andWhere(':user = f.user')
+            ->setParameter('user',$user)
+            ->getQuery()
+            ->getArrayResult()
+            ;
+
+    }
     // /**
     //  * @return Fichier[] Returns an array of Fichier objects
     //  */

@@ -22,7 +22,7 @@
             {% for key,value in listeFichiersTheme %}
                 <tr>
                     <td>{{ value.id }}</td>
-                    <td><a href="{{ path('download',{'id':value.id}) }}">{{ value.nom }}</a></td>
+                    <td><a href="{{ path('get_file',{'id':value.id}) }}">{{ value.nom }}</a></td>
                     <td>{{ value.nomoriginal }}</td>
                     <td>{{ value.extension }}</td>
                     <td>{{ value.taille }}</td>
